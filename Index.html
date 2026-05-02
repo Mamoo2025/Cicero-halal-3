@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cicerò — Guida Halal di Roma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#F7F6F2;--bg2:#FFFFFF;--bg3:#F0EFE9;
+  --border:#E5E3DB;--border2:#D0CEC4;
+  --text:#1A1A18;--text2:#4A4A44;--muted:#8A8A82;
+  --green:#1B8A4C;--green-lt:#E8F5EE;--green-md:#C2E5D0;--green-viv:#00C853;
+  --yellow:#C47D0A;--yellow-lt:#FEF6E4;--yellow-md:#F9DFA0;
+  --red:#C0392B;--red-lt:#FDECEA;--red-md:#F5C6C2;
+  --grey-lt:#F0EFE9;
+  --r:18px;--rsm:12px;
+  --sh0:0 2px 8px rgba(0,0,0,.06);--sh1:0 6px 24px rgba(0,0,0,.10);--sh2:0 16px 48px rgba(0,0,0,.16);
+  --fs:'Instrument Serif',Georgia,serif;--fb:'Figtree',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+button{cursor:pointer;font-family:var(--fb);border:none;outline:none;background:none;}
+input,textarea,select{font-family:var(--fb);}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(247,246,242,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nbrand{display:flex;align-items:center;gap:8px;}
+.nicon{width:30px;height:30px;border-radius:9px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.nname{font-size:16px;font-weight:800;letter-spacing:-.3px;}
+.nname span{color:var(--green);}
+.nlive{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);font-size:10px;font-weight:700;color:var(--green);}
+.ldot{width:5px;height:5px;border-radius:99px;background:var(--green-viv);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.nlinks{display:flex;gap:4px;}
+.nlnk{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--muted);transition:all .18s;}
+.nlnk:hover,.nlnk.active{background:var(--bg3);color:var(--text);}
+.nlnk.active{color:var(--green);}
+.nadd{padding:7px 14px;border-radius:99px;background:var(--green);color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(27,138,76,.22);transition:all .18s;}
+.nadd:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,138,76,.35);}
+
+/* PAGES */
+.page{display:none;padding-top:56px;min-height:100vh;}
+.page.active{display:block;animation:pin .28s ease;}
+@keyframes pin{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+/* HOME */
+.htop{max-width:680px;margin:0 auto;padding:28px 16px 0;}
+.heyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px;}
+.hh1{font-family:var(--fs);font-size:clamp(30px,7vw,44px);line-height:1.08;letter-spacing:-.5px;margin-bottom:6px;}
+.hh1 em{font-style:italic;color:var(--green);}
+.hsub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+
+.sbar{display:flex;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--sh0);margin-bottom:14px;transition:border-color .2s,box-shadow .2s;}
+.sbar:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,138,76,.1);}
+.sico{padding:0 14px;color:var(--muted);font-size:17px;flex-shrink:0;}
+.sinp{flex:1;padding:13px 0;background:none;border:none;outline:none;font-size:14px;color:var(--text);}
+.sinp::placeholder{color:var(--muted);}
+.sbtn{padding:9px 14px;margin:4px;background:var(--green);color:#fff;font-size:13px;font-weight:700;border-radius:10px;transition:background .18s;}
+.sbtn:hover{background:#167040;}
+
+.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:0 16px 2px;max-width:680px;margin:0 auto 22px;}
+.filters::-webkit-scrollbar{display:none;}
+.fp{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:99px;background:var(--bg2);border:1.5px solid var(--border);font-size:13px;font-weight:600;color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .18s;}
+.fp:hover{border-color:var(--green);color:var(--green);}
+.fp.active{background:var(--green);border-color:var(--green);color:#fff;}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:680px;margin:0 auto 26px;padding:0 16px;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:14px 8px;text-align:center;box-shadow:var(--sh0);}
+.scn{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}
+.scl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+
+.sec{max-width:680px;margin:0 auto;padding:0 16px 28px;}
+.secrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sectit{font-size:17px;font-weight:800;letter-spacing:-.3px;}
+.secmore{font-size:13px;font-weight:700;color:var(--green);cursor:pointer;}
+
+/* LEGEND CARD */
+.lgcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}
+.lgtit{font-size:14px;font-weight:800;margin-bottom:4px;}
+.lgsub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.lgrows{display:flex;flex-direction:column;gap:10px;}
+.lgrow{display:flex;align-items:flex-start;gap:10px;}
+.lgdot{width:10px;height:10px;border-radius:99px;flex-shrink:0;margin-top:4px;}
+.lglabel{font-size:13px;font-weight:700;margin-bottom:1px;}
+.lgdesc{font-size:12px;color:var(--muted);line-height:1.4;}
+.lgdisc{margin-top:14px;padding:10px 12px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:var(--rsm);font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;}
+
+/* SPOT CARDS */
+.spots{display:flex;flex-direction:column;gap:10px;}
+.scard{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s;box-shadow:var(--sh0);}
+.scard:hover{border-color:var(--green-md);box-shadow:var(--sh1);transform:translateY(-1px);}
+.scimg{width:54px;height:54px;border-radius:13px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.scbody{flex:1;min-width:0;}
+.scname{font-size:15px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scmeta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-bottom:6px;}
+.mdot{width:3px;height:3px;border-radius:99px;background:var(--muted);flex-shrink:0;}
+.mrat{color:var(--yellow);font-weight:700;}
+.stags{display:flex;gap:5px;flex-wrap:wrap;}
+.stag{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.stag.g{background:var(--green-lt);color:var(--green);border-color:var(--green-md);}
+.stag.r{background:var(--red-lt);color:var(--red);border-color:var(--red-md);}
+.sbadge{flex-shrink:0;padding:5px 10px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
+.sbr{background:var(--green);color:#fff;}
+.sbd{background:var(--yellow-lt);color:var(--yellow);border:1.5px solid var(--yellow-md);}
+.sbu{background:var(--grey-lt);color:var(--muted);border:1.5px solid var(--border);}
+.sbw{background:var(--red-lt);color:var(--red);border:1.5px solid var(--red-md);}
+
+/* MINI MAP */
+.mmap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;height:160px;position:relative;cursor:pointer;box-shadow:var(--sh0);}
+.mmap:hover .mmov{opacity:1;}
+.mmbg{width:100%;height:100%;background-color:#EFF6F2;background-image:linear-gradient(rgba(27,138,76,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(27,138,76,.05) 1px,transparent 1px);background-size:28px 28px;position:relative;}
+.mmroad{position:absolute;background:rgba(255,255,255,.9);border-radius:2px;}
+.mmpin{position:absolute;width:24px;height:24px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:11px;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.18);}
+.mmov{position:absolute;inset:0;background:rgba(27,138,76,.07);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.mmcta{padding:9px 18px;background:var(--green);color:#fff;font-weight:700;font-size:13px;border-radius:99px;box-shadow:0 4px 14px rgba(27,138,76,.4);}
+.mmlabel{position:absolute;bottom:8px;left:8px;padding:3px 9px;background:rgba(255,255,255,.9);border-radius:99px;font-size:10px;font-weight:700;border:1px solid var(--border);}
+
+/* MAP PAGE */
+.mapwrap{width:100%;height:calc(100vh - 56px);background:#EFF6F2;position:relative;overflow:hidden;}
+.mapbg{position:absolute;inset:0;background-color:#EFF6F2;background-image:linear-gradient(rgba(27,138,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(27,138,76,.04) 1px,transparent 1px);background-size:36px 36px;}
+.mrd{position:absolute;background:rgba(255,255,255,.85);border-radius:3px;}
+.mriver{position:absolute;background:rgba(100,185,220,.3);border-radius:40px;}
+.mzone{position:absolute;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(27,138,76,.45);transform:translate(-50%,-50%);pointer-events:none;}
+
+.mpin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;transition:transform .18s;z-index:10;}
+.mpin:hover{transform:translate(-50%,-110%) scale(1.12);z-index:20;}
+.mpinb{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.9);box-shadow:0 3px 10px rgba(0,0,0,.2);}
+.mpinb span{transform:rotate(45deg);font-size:15px;display:block;}
+.mpint{width:6px;height:6px;border-radius:99px;margin:0 auto;margin-top:-1px;opacity:.4;}
+.mpin.reliable .mpinb{background:var(--green);}
+.mpin.reliable .mpint{background:var(--green);}
+.mpin.declared .mpinb{background:#E6A817;}
+.mpin.declared .mpint{background:#E6A817;}
+.mpin.unknown .mpinb{background:var(--muted);}
+.mpin.unknown .mpint{background:var(--muted);}
+.mpin.warning .mpinb{background:var(--red);}
+.mpin.warning .mpint{background:var(--red);}
+.mpin.reliable::before{content:'';position:absolute;top:50%;left:50%;width:34px;height:34px;border-radius:99px;background:var(--green);opacity:0;animation:mpulse 2.5s infinite;transform:translate(-50%,-50%);pointer-events:none;z-index:-1;}
+@keyframes mpulse{0%{opacity:.25;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-50%) scale(2.2);}}
+
+.mapsrch{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:30;width:min(360px,calc(100vw - 120px));display:flex;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--sh1);}
+.msinp{flex:1;padding:11px 14px;background:none;border:none;outline:none;font-size:13px;color:var(--text);}
+.msinp::placeholder{color:var(--muted);}
+.msgo{padding:10px 14px;background:var(--green);color:#fff;font-size:13px;font-weight:700;}
+
+.mapleg{position:absolute;top:12px;left:12px;z-index:30;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:var(--rsm);padding:12px 14px;box-shadow:var(--sh1);backdrop-filter:blur(12px);min-width:164px;}
+.mltit{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;}
+.mlrow{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px;}
+.mldot{width:9px;height:9px;border-radius:99px;flex-shrink:0;margin-top:3px;}
+.mllabel{font-size:12px;font-weight:700;line-height:1.2;}
+.mldesc{font-size:10px;color:var(--muted);line-height:1.3;}
+
+.mapzoom{position:absolute;bottom:56px;right:12px;z-index:30;display:flex;flex-direction:column;gap:1px;border-radius:10px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--sh0);}
+.mzbtn{width:38px;height:38px;background:var(--bg2);color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .18s;}
+.mzbtn:hover{background:var(--bg3);}
+.mapfoot{position:absolute;bottom:0;left:0;right:0;padding:7px 14px;background:rgba(247,246,242,.93);backdrop-filter:blur(8px);border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center;}
+
+/* BOTTOM SHEET */
+.bsov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .28s;}
+.bsov.open{opacity:1;pointer-events:all;}
+.bs{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);max-width:640px;margin:0 auto;box-shadow:0 -8px 40px rgba(0,0,0,.12);}
+.bs.open{transform:translateY(0);}
+.bshandle{width:34px;height:4px;border-radius:99px;background:var(--border2);margin:12px auto 0;}
+
+.bsh{padding:18px 18px 0;}
+.bshcat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:5px;}
+.bshname{font-family:var(--fs);font-size:26px;line-height:1.1;margin-bottom:8px;}
+.bshmeta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+.bshrat{color:var(--yellow);font-weight:700;}
+
+.tblock{margin:16px 18px 0;padding:14px 16px;border-radius:var(--rsm);display:flex;align-items:flex-start;gap:12px;}
+.tblock.reliable{background:var(--green-lt);border:1.5px solid var(--green-md);}
+.tblock.declared{background:var(--yellow-lt);border:1.5px solid var(--yellow-md);}
+.tblock.unknown{background:var(--grey-lt);border:1.5px solid var(--border);}
+.tblock.warning{background:var(--red-lt);border:1.5px solid var(--red-md);}
+.ticon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.tlabel{font-size:14px;font-weight:800;margin-bottom:2px;}
+.tblock.reliable .tlabel{color:var(--green);}
+.tblock.declared .tlabel{color:var(--yellow);}
+.tblock.unknown  .tlabel{color:var(--muted);}
+.tblock.warning  .tlabel{color:var(--red);}
+.tmeaning{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:3px;}
+.tnote{font-size:11px;color:var(--muted);font-style:italic;}
+
+.bshgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 18px 0;}
+.bshcell{background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border);padding:11px 13px;}
+.cl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px;}
+.cv{font-size:14px;font-weight:700;}
+.cv.g{color:var(--green);}
+.cv.r{color:var(--red);}
+
+.relwrap{margin:14px 18px 0;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:13px;}
+.reltit{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;}
+.reltrack{height:5px;border-radius:99px;background:var(--border);overflow:hidden;margin-bottom:6px;}
+.relfill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.relfoot{font-size:11px;color:var(--muted);}
+
+.bshsrc{margin:10px 18px 0;padding:10px 13px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:flex-start;gap:7px;}
+.bshdisc{margin:10px 18px 0;padding:10px 13px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:var(--rsm);font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;}
+.bshacts{display:flex;gap:8px;margin:16px 18px 30px;}
+.bact{flex:1;padding:12px 8px;border-radius:var(--rsm);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s;}
+.bact.pri{background:var(--green);color:#fff;box-shadow:0 2px 10px rgba(27,138,76,.2);}
+.bact.pri:hover{box-shadow:0 4px 18px rgba(27,138,76,.35);}
+.bact.sec{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
+.bact.sec:hover{border-color:var(--border2);}
+.bact.dan{background:var(--red-lt);color:var(--red);border:1px solid var(--red-md);}
+
+/* ADD PAGE */
+.addwrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
+.addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}
+.addsub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.goldrule{padding:12px 14px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rsm);font-size:12px;color:var(--green);font-weight:600;line-height:1.5;margin-bottom:22px;}
+.fg{margin-bottom:18px;}
+.fl{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px;}
+.fi,.fsel,.fta{width:100%;padding:12px 14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:14px;transition:all .2s;}
+.fi::placeholder,.fta::placeholder{color:var(--muted);}
+.fi:focus,.fsel:focus,.fta:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(27,138,76,.08);}
+.fsel{appearance:none;cursor:pointer;}
+.fselw{position:relative;}
+.fselw::after{content:'⌄';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.fta{min-height:90px;resize:vertical;line-height:1.6;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sopt{padding:13px 14px;border-radius:var(--rsm);border:2px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:9px;}
+.sopt:hover{border-color:var(--border2);}
+.sopt.sel-reliable{border-color:var(--green);background:var(--green-lt);}
+.sopt.sel-declared{border-color:var(--yellow);background:var(--yellow-lt);}
+.sopt.sel-unknown{border-color:var(--muted);background:var(--grey-lt);}
+.sopt.sel-warning{border-color:var(--red);background:var(--red-lt);}
+.soptd{width:11px;height:11px;border-radius:99px;flex-shrink:0;}
+.soptl{font-size:13px;font-weight:700;}
+.sopts{font-size:11px;color:var(--muted);}
+.fsub{width:100%;padding:15px;border-radius:var(--rsm);background:var(--green);color:#fff;font-size:15px;font-weight:800;transition:all .18s;margin-top:6px;box-shadow:0 2px 12px rgba(27,138,76,.22);}
+.fsub:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(27,138,76,.32);}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:400;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}
+.flogo{font-size:15px;font-weight:800;margin-bottom:8px;}
+.flogo span{color:var(--green);}
+.fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}
+.fdisc strong{color:var(--yellow);}
+.fcopy{font-size:11px;color:var(--border2);}
+
+@media(max-width:580px){
+  .nlinks{display:none;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .sgrid{grid-template-columns:1fr;}
+  .mapleg{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✓ Segnalazione inviata — grazie!</div>
+
+<nav>
+  <div class="nbrand">
+    <div class="nicon">🕌</div>
+    <div class="nname">Cicerò <span>Halal</span></div>
+    <div class="nlive"><div class="ldot"></div> Database Live</div>
+  </div>
+  <div class="nlinks">
+    <button class="nlnk active" onclick="goPage('home')">Home</button>
+    <button class="nlnk" onclick="goPage('map')">Mappa</button>
+    <button class="nlnk" onclick="goPage('add')">Segnala</button>
+  </div>
+  <button class="nadd" onclick="goPage('add')">+ Aggiungi</button>
+</nav>
+
+<!-- ═══════ HOME ═══════ -->
+<div class="page active" id="page-home">
+  <div class="htop">
+    <div class="heyebrow">🕌 Roma · Guida Halal</div>
+    <h1 class="hh1">Cicerò Halal Roma,<br/><em>costruita insieme.</em></h1>
+    <p class="hsub">Dai musulmani, per i musulmani. Ristoranti, street food, macellerie e moschee — con trasparenza sul livello di affidabilità.</p>
+    <div class="sbar">
+      <div class="sico">🔍</div>
+      <input class="sinp" id="srch" type="text" placeholder="Cerca zona, cucina, locale…" oninput="renderSpots()"/>
+      <button class="sbtn" onclick="goPage('map')">Cerca</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="fp active" onclick="setF('all',this)">🍽 Tutti</button>
+    <button class="fp" onclick="setF('ristorante',this)">🥘 Ristoranti</button>
+    <button class="fp" onclick="setF('street food',this)">🌯 Street food</button>
+    <button class="fp" onclick="setF('macelleria',this)">🥩 Macellerie</button>
+    <button class="fp" onclick="setF('moschea',this)">🕌 Moschee</button>
+    <button class="fp" onclick="setF('mosque',this)">📍 Vicino moschea</button>
+  </div>
+
+  <div class="stats" id="statsGrid"></div>
+
+  <!-- LEGENDA AFFIDABILITÀ -->
+  <div class="sec">
+    <div class="secrow"><div class="sectit">Come funziona l'affidabilità</div></div>
+    <div class="lgcard">
+      <div class="lgtit">Cosa significano i badge</div>
+      <div class="lgsub">Cicerò <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
+      <div class="lgrows">
+        <div class="lgrow">
+          <div class="lgdot" style="background:var(--green)"></div>
+          <div>
+            <div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div>
+            <div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti (HalalTrip, Zabihah, community verificata)</div>
+          </div>
+        </div>
+        <div class="lgrow">
+          <div class="lgdot" style="background:#E6A817"></div>
+          <div>
+            <div class="lglabel" style="color:var(--yellow)">📋 Dichiarato dal locale</div>
+            <div class="lgdesc">Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.</div>
+          </div>
+        </div>
+        <div class="lgrow">
+          <div class="lgdot" style="background:var(--muted)"></div>
+          <div>
+            <div class="lglabel" style="color:var(--muted)">❓ Non verificato</div>
+            <div class="lgdesc">Segnalato dalla community ma senza conferme. Verifica direttamente con il locale prima di ordinare.</div>
+          </div>
+        </div>
+        <div class="lgrow">
+          <div class="lgdot" style="background:var(--red)"></div>
+          <div>
+            <div class="lglabel" style="color:var(--red)">⚠️ Segnalazioni dubbie</div>
+            <div class="lgdesc">Utenti hanno riportato problemi di conformità halal. Prestare particolare attenzione.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lgdisc">⚠ Cicerò non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    </div>
+  </div>
+
+  <!-- SPOTS -->
+  <div class="sec">
+    <div class="secrow">
+      <div class="sectit">Spot consigliati</div>
+      <div class="secmore" onclick="goPage('map')">Vedi sulla mappa →</div>
+    </div>
+    <div class="spots" id="spotsGrid"></div>
+  </div>
+
+  <!-- MINI MAP -->
+  <div class="sec">
+    <div class="secrow">
+      <div class="sectit">Mappa veloce</div>
+      <div class="secmore" onclick="goPage('map')">Apri mappa →</div>
+    </div>
+    <div class="mmap" onclick="goPage('map')">
+      <div class="mmbg">
+        <div class="mmroad" style="top:35%;left:0;right:0;height:12px;"></div>
+        <div class="mmroad" style="top:60%;left:0;right:0;height:8px;"></div>
+        <div class="mmroad" style="top:0;bottom:0;left:30%;width:10px;"></div>
+        <div class="mmroad" style="top:0;bottom:0;left:62%;width:8px;"></div>
+        <div id="mmPins"></div>
+      </div>
+      <div class="mmov"><div class="mmcta">🗺 Apri mappa completa</div></div>
+      <div class="mmlabel">Roma · 18 spot halal</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="flogo">Cicerò <span>Halal</span></div>
+    <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. Cicerò non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="fcopy">© 2025 Cicerò Halal — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
+  </footer>
+</div>
+
+<!-- ═══════ MAP ═══════ -->
+<div class="page" id="page-map">
+  <div class="mapwrap">
+    <div class="mapbg"></div>
+    <div class="mrd" style="top:28%;left:0;right:0;height:16px;"></div>
+    <div class="mrd" style="top:50%;left:0;right:0;height:10px;"></div>
+    <div class="mrd" style="top:68%;left:0;right:0;height:12px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:22%;width:12px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:50%;width:10px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:72%;width:8px;"></div>
+    <div class="mrd" style="top:15%;left:5%;right:50%;height:7px;transform:rotate(4deg);"></div>
+    <div class="mriver" style="top:20%;left:14%;width:8%;height:70%;transform:rotate(8deg);"></div>
+    <div class="mzone" style="top:22%;left:13%">Prati</div>
+    <div class="mzone" style="top:55%;left:46%">Trastevere</div>
+    <div class="mzone" style="top:33%;left:62%">Esquilino</div>
+    <div class="mzone" style="top:17%;left:58%">Termini</div>
+    <div class="mzone" style="top:74%;left:66%">Ostiense</div>
+    <div id="mapPins"></div>
+
+    <div class="mapsrch">
+      <input class="msinp" placeholder="🔍  Cerca in mappa…"/>
+      <button class="msgo">Vai</button>
+    </div>
+
+    <div class="mapleg">
+      <div class="mltit">Livello affidabilità</div>
+      <div class="mlrow"><div class="mldot" style="background:var(--green)"></div><div><div class="mllabel">Più fonti concordano</div><div class="mldesc">Verificato da fonti pubbliche</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:#E6A817"></div><div><div class="mllabel">Dichiarato dal locale</div><div class="mldesc">Non verificato da terzi</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:var(--muted)"></div><div><div class="mllabel">Non verificato</div><div class="mldesc">Verifica con il locale</div></div></div>
+      <div class="mlrow" style="margin-bottom:0"><div class="mldot" style="background:var(--red)"></div><div><div class="mllabel">Segnalazioni dubbie</div><div class="mldesc">Prestare attenzione</div></div></div>
+    </div>
+
+    <div class="mapzoom">
+      <button class="mzbtn">+</button>
+      <button class="mzbtn">−</button>
+    </div>
+    <div class="mapfoot">⚠ Cicerò non certifica i locali — verifica sempre direttamente con il ristoratore</div>
+  </div>
+</div>
+
+<!-- ═══════ ADD ═══════ -->
+<div class="page" id="page-add">
+  <div class="addwrap">
+    <div class="addh">Aggiungi uno spot</div>
+    <p class="addsub">Aiuta la community. Le segnalazioni vengono revisionate prima della pubblicazione.</p>
+    <div class="goldrule">🌿 <strong>Regola d'oro:</strong> non scrivere "certificato halal" se non hai una prova concreta. Usa "dichiarato" o "non verificato" — la community ti ringrazierà.</div>
+    <div class="fg"><label class="fl">Nome del locale *</label><input class="fi" type="text" placeholder="Es. Al Madina Kebab"/></div>
+    <div class="fg"><label class="fl">Indirizzo *</label><input class="fi" type="text" placeholder="Via Roma 42, 00100 Roma RM"/></div>
+    <div class="fg">
+      <label class="fl">Categoria *</label>
+      <div class="fselw"><select class="fsel"><option>Seleziona…</option><option>Ristorante</option><option>Street food</option><option>Macelleria</option><option>Pizzeria</option><option>Supermercato</option><option>Caffè / Bakery</option><option>Moschea</option></select></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Stato halal *</label>
+      <div class="sgrid">
+        <div class="sopt" onclick="pickS('reliable',this)"><div class="soptd" style="background:var(--green)"></div><div><div class="soptl">Più fonti concordano</div><div class="sopts">Confermato da fonti pubbliche</div></div></div>
+        <div class="sopt" onclick="pickS('declared',this)"><div class="soptd" style="background:#E6A817"></div><div><div class="soptl">Dichiarato dal locale</div><div class="sopts">Il gestore afferma halal</div></div></div>
+        <div class="sopt" onclick="pickS('unknown',this)"><div class="soptd" style="background:var(--muted)"></div><div><div class="soptl">Non verificato</div><div class="sopts">Nessuna info certa</div></div></div>
+        <div class="sopt" onclick="pickS('warning',this)"><div class="soptd" style="background:var(--red)"></div><div><div class="soptl">Segnalazioni dubbie</div><div class="sopts">Ho dubbi o prove contrarie</div></div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Note aggiuntive</label><textarea class="fta" placeholder="Certifica da quale organizzazione? Solo carne? Alcool nel menù?…"></textarea></div>
+    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" type="text" placeholder="Es. HalalTrip, visita personale, Zabihah…"/></div>
+    <button class="fsub" onclick="submitForm()">Invia segnalazione →</button>
+  </div>
+</div>
+
+<!-- BOTTOM SHEET -->
+<div class="bsov" id="bsov" onclick="closeBS()"></div>
+<div class="bs" id="bs">
+  <div class="bshandle"></div>
+  <div id="bsContent"></div>
+</div>
+
+<script>
+const TRUST = {
+  reliable:{label:'Più fonti concordano',meaning:'Segnalato come halal da almeno 2 fonti pubbliche indipendenti (HalalTrip, Zabihah o community verificata).',note:'Cicerò non certifica i locali. Verifica sempre con il ristoratore.',icon:'✅',cls:'reliable',bar:'92%',color:'var(--green)'},
+  declared:{label:'Dichiarato dal locale',meaning:'Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.',note:'Cicerò non certifica i locali. Verifica sempre con il ristoratore.',icon:'📋',cls:'declared',bar:'55%',color:'#E6A817'},
+  unknown:{label:'Non verificato',meaning:'Segnalato dalla community ma senza conferme da fonti pubbliche. Verifica direttamente.',note:'Cicerò non certifica i locali. Verifica sempre con il ristoratore.',icon:'❓',cls:'unknown',bar:'20%',color:'var(--muted)'},
+  warning:{label:'Segnalazioni dubbie',meaning:'Utenti hanno riportato problemi di conformità halal. Prestare attenzione.',note:'Cicerò non certifica i locali. Verifica sempre con il ristoratore.',icon:'⚠️',cls:'warning',bar:'5%',color:'var(--red)'}
+};
+
+const P = [
+  {id:1,name:'Peri Peri Halal Grill',category:'ristorante',cuisine:'Internazionale / Grill',price:'€€',alcohol:false,status:'reliable',rating:4.6,reviews:280,address:'Via della Mercede 40A, Roma',mx:52,my:30,emoji:'🍗',nm:false,source:'Confermato da HalalTrip, Trip101 e EatingEurope'},
+  {id:2,name:'Gandhi 2 Indian Restaurant',category:'ristorante',cuisine:'Indiana',price:'€€',alcohol:false,status:'reliable',rating:4.7,reviews:412,address:'Via Genova 29/A, Roma',mx:62,my:35,emoji:'🍛',nm:false,source:'In attività da 20+ anni · EatingEurope e Trip101'},
+  {id:3,name:'Himalaya Kashmir',category:'ristorante',cuisine:'Indiana / Pakistana',price:'€€',alcohol:false,status:'reliable',rating:4.5,reviews:198,address:'Via Principe Amedeo 50, Roma',mx:65,my:38,emoji:'🫕',nm:true,source:'Confermato da HalalTrip e più travel guide'},
+  {id:4,name:'Luna Caprese',category:'ristorante',cuisine:'Italiana Halal',price:'€€',alcohol:false,status:'reliable',rating:4.4,reviews:167,address:'Via della Croce 33, Roma',mx:48,my:26,emoji:'🍕',nm:false,source:'Confermato da Trip101 e Mr & Mrs Halal'},
+  {id:5,name:'Chicken Hut Navona',category:'street food',cuisine:'Fast food / Kebab',price:'€',alcohol:false,status:'reliable',rating:4.3,reviews:95,address:'Corso del Rinascimento 83, Roma',mx:42,my:34,emoji:'🍖',nm:false,source:'Confermato da EatingEurope · Aperto tutti i giorni'},
+  {id:6,name:'Shawarma Station Halal',category:'street food',cuisine:'Araba / Libanese',price:'€',alcohol:false,status:'reliable',rating:4.2,reviews:143,address:'Via Merulana 271, Roma',mx:68,my:42,emoji:'🌯',nm:true,source:'Listato su HalalTrip e TripAdvisor'},
+  {id:7,name:'Quattro Fontana Romana',category:'ristorante',cuisine:'Internazionale',price:'€€',alcohol:false,status:'reliable',rating:4.1,reviews:88,address:'Via delle Quattro Fontane 33, Roma',mx:60,my:32,emoji:'🍽',nm:false,source:'Listato direttamente su HalalTrip Roma'},
+  {id:8,name:'Roma Halal Food',category:'ristorante',cuisine:'Indiana / Italiana',price:'€',alcohol:false,status:'reliable',rating:4.0,reviews:201,address:'Via Daniele Manin 3, Roma',mx:66,my:30,emoji:'🥘',nm:true,source:'HalalTrip · Confermato da Trip101'},
+  {id:9,name:'Termini Halal Food',category:'ristorante',cuisine:'Pakistana / Bangladeshi',price:'€',alcohol:false,status:'reliable',rating:3.8,reviews:74,address:'Via Giolitti, Roma',mx:70,my:28,emoji:'🍱',nm:true,source:'Recensito su Zabihah · Cartello halal visibile'},
+  {id:10,name:'La Via della Seta',category:'ristorante',cuisine:'Siriana / Mediorientale',price:'€€',alcohol:false,status:'declared',rating:4.5,reviews:112,address:'Via della Pace, Roma',mx:40,my:32,emoji:'🧆',nm:false,source:'Dichiarato halal · Cucina siriana autentica'},
+  {id:11,name:'Shawarma Express',category:'street food',cuisine:'Libanese / Araba',price:'€',alcohol:false,status:'declared',rating:4.2,reviews:67,address:'Vicolo del Gallo 11, Roma',mx:38,my:38,emoji:'🥙',nm:false,source:'Dichiarato halal · IbnBattutatravel.com'},
+  {id:12,name:'Ali Baba Restaurant',category:'ristorante',cuisine:'Mediterranea / Turca',price:'€€',alcohol:false,status:'declared',rating:4.0,reviews:55,address:'Via Dell Arco di Travertino 27, Roma',mx:72,my:70,emoji:'🫔',nm:false,source:'Dichiarato halal · Doner kebab e hummus'},
+  {id:13,name:'Istanbul Kebab Flaminio',category:'street food',cuisine:'Turca',price:'€',alcohol:false,status:'declared',rating:3.9,reviews:89,address:'Via Flaminia 21, Roma',mx:30,my:15,emoji:'🥙',nm:false,source:'HalalTrip · Dichiarato halal dal gestore'},
+  {id:14,name:'Himalaya Palace',category:'ristorante',cuisine:'Indiana / Pakistana',price:'€€',alcohol:false,status:'declared',rating:4.1,reviews:134,address:'Circumvallazione Gianicolense 277, Roma',mx:20,my:62,emoji:'🍛',nm:false,source:'Listato su HalalTrip Roma'},
+  {id:15,name:'Ciro Kebab',category:'street food',cuisine:'Turca / Araba',price:'€',alcohol:false,status:'unknown',rating:3.5,reviews:23,address:'Via del Corso, Roma',mx:44,my:28,emoji:'🌮',nm:false,source:'Segnalato da viaggiatori · Verifica con il locale'},
+  {id:16,name:'King Pizza Termini',category:'street food',cuisine:'Italiana / Pizza',price:'€',alcohol:false,status:'unknown',rating:3.6,reviews:41,address:'Via Giolitti zona Termini, Roma',mx:68,my:26,emoji:'🍕',nm:true,source:'Segnalato come halal-friendly · Non verificato'},
+  {id:17,name:'Moschea di Roma',category:'moschea',cuisine:'—',price:'—',alcohol:false,status:'reliable',rating:5.0,reviews:890,address:'Viale della Moschea 85, Roma',mx:32,my:12,emoji:'🕌',nm:true,source:'La moschea più grande d\'Europa'},
+  {id:18,name:'Masjid Al Rahman',category:'moschea',cuisine:'—',price:'—',alcohol:false,status:'reliable',rating:4.8,reviews:210,address:'Via di Santa Vito 1-10, Roma',mx:66,my:44,emoji:'🕌',nm:true,source:'Moschea nel quartiere Esquilino'},
+];
+
+let activeF = 'all';
+
+function renderStats(){
+  const t=P.length, r=P.filter(x=>x.status==='reliable').length,
+        d=P.filter(x=>x.status==='declared').length,
+        u=P.filter(x=>x.status==='unknown'||x.status==='warning').length;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="sc"><div class="scn">${t}</div><div class="scl">Spot</div></div>
+    <div class="sc"><div class="scn" style="color:var(--green)">${r}</div><div class="scl">Più fonti</div></div>
+    <div class="sc"><div class="scn" style="color:var(--yellow)">${d}</div><div class="scl">Dichiarati</div></div>
+    <div class="sc"><div class="scn" style="color:var(--muted)">${u}</div><div class="scl">Da verificare</div></div>`;
+}
+
+const BL={reliable:'sbr',declared:'sbd',unknown:'sbu',warning:'sbw'};
+const BT={reliable:'Più fonti',declared:'Dichiarato',unknown:'Non verif.',warning:'Dubbio'};
+
+function renderSpots(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const f=P.filter(p=>{
+    if(activeF==='mosque') return p.nm;
+    if(activeF!=='all'&&!p.category.toLowerCase().includes(activeF)) return false;
+    if(q&&!p.name.toLowerCase().includes(q)&&!p.cuisine.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('spotsGrid').innerHTML=f.map(p=>`
+    <div class="scard" onclick="openBS(${p.id})">
+      <div class="scimg">${p.emoji}</div>
+      <div class="scbody">
+        <div class="scname">${p.name}</div>
+        <div class="scmeta"><span class="mrat">★ ${p.rating}</span><span class="mdot"></span><span>${p.category}</span><span class="mdot"></span><span>${p.price}</span></div>
+        <div class="stags">
+          <span class="stag">${p.cuisine}</span>
+          ${p.alcohol?'<span class="stag r">🍷 Alcool</span>':'<span class="stag g">✓ No alcool</span>'}
+          ${p.nm?'<span class="stag">🕌 Vicino moschea</span>':''}
+        </div>
+      </div>
+      <div class="sbadge ${BL[p.status]}">${BT[p.status]}</div>
+    </div>`).join('');
+}
+
+function renderPins(){
+  document.getElementById('mapPins').innerHTML=P.map(p=>`
+    <div class="mpin ${p.status}" style="left:${p.mx}%;top:${p.my}%" onclick="openBS(${p.id})" title="${p.name}">
+      <div class="mpinb"><span>${p.emoji}</span></div>
+      <div class="mpint"></div>
+    </div>`).join('');
+  document.getElementById('mmPins').innerHTML=P.slice(0,12).map(p=>`
+    <div class="mmpin ${p.status}" style="left:${p.mx}%;top:${p.my}%;background:${p.status==='reliable'?'var(--green)':p.status==='declared'?'#E6A817':p.status==='warning'?'var(--red)':'var(--muted)'}">${p.emoji}</div>`).join('');
+}
+
+function openBS(id){
+  const p=P.find(x=>x.id===id); if(!p) return;
+  const t=TRUST[p.status];
+  document.getElementById('bsContent').innerHTML=`
+    <div class="bsh">
+      <div class="bshcat">${p.category} · ${p.cuisine}</div>
+      <div class="bshname">${p.name}</div>
+      <div class="bshmeta"><span class="bshrat">★ ${p.rating}</span><span>(${p.reviews} rec.)</span><span>·</span><span>${p.price}</span><span>·</span><span>${p.address}</span></div>
+    </div>
+    <div class="tblock ${t.cls}">
+      <div class="ticon">${t.icon}</div>
+      <div><div class="tlabel">${t.label}</div><div class="tmeaning">${t.meaning}</div><div class="tnote">${t.note}</div></div>
+    </div>
+    <div class="bshgrid">
+      <div class="bshcell"><div class="cl">Cucina</div><div class="cv">${p.cuisine}</div></div>
+      <div class="bshcell"><div class="cl">Prezzo</div><div class="cv">${p.price}</div></div>
+      <div class="bshcell"><div class="cl">Alcool</div><div class="cv ${p.alcohol?'r':'g'}">${p.alcohol?'⚠ Sì':'✓ No'}</div></div>
+      <div class="bshcell"><div class="cl">Stato</div><div class="cv" style="color:${t.color}">${t.label}</div></div>
+    </div>
+    <div class="relwrap">
+      <div class="reltit">Livello di affidabilità informazione</div>
+      <div class="reltrack"><div class="relfill" id="rf" style="width:0;background:${t.color}"></div></div>
+      <div class="relfoot">Basato su fonti pubbliche e segnalazioni community</div>
+    </div>
+    <div class="bshsrc"><span>📌</span><span>${p.source}</span></div>
+    <div class="bshdisc">⚠ Cicerò non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="bshacts">
+      <button class="bact pri" onclick="alert('Apertura chiamata…')">📞 Chiama</button>
+      <button class="bact sec" onclick="alert('Apertura navigazione…')">🗺 Indicazioni</button>
+      <button class="bact dan" onclick="goPage('add');closeBS()">⚠ Segnala</button>
+    </div>`;
+  document.getElementById('bsov').classList.add('open');
+  document.getElementById('bs').classList.add('open');
+  setTimeout(()=>{const f=document.getElementById('rf');if(f)f.style.width=t.bar;},120);
+}
+function closeBS(){document.getElementById('bsov').classList.remove('open');document.getElementById('bs').classList.remove('open');}
+
+function goPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  document.querySelectorAll('.nlnk').forEach(l=>l.classList.remove('active'));
+  const i={home:0,map:1,add:2};
+  const ls=document.querySelectorAll('.nlnk');
+  if(ls[i[n]])ls[i[n]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function setF(f,btn){
+  activeF=f;
+  document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderSpots();
+}
+
+function pickS(s,el){document.querySelectorAll('.sopt').forEach(o=>o.className='sopt');el.classList.add('sel-'+s);}
+
+function submitForm(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);goPage('home');}
+
+renderStats(); renderSpots(); renderPins();
+</script>
+</body>
+</html>
