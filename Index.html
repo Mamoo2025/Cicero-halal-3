@@ -1,447 +1,566 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CICERO | Guida Halal Roma</title>
-
-    <!-- Font & Assets -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <style>
-        :root {
-            /* Palette Premium */
-            --bg: #F9F8F4;
-            --bg2: #FFFFFF;
-            --bg3: #F1F0E8;
-            --border: #E2E0D6;
-            --border2: #D1CEC5;
-            --text: #2A2A28;
-            --text2: #5A5A54;
-            --muted: #9A9A92;
-            
-            /* Colori Stato */
-            --green: #2D6A4F;
-            --green-lt: #F0F7F4;
-            --green-md: #B7D1C4;
-            --yellow: #B5832D;
-            --yellow-lt: #FFF9ED;
-            --yellow-md: #E9D7B3;
-            --red: #A44A3F;
-            --red-lt: #FDF4F3;
-
-            --r: 24px;
-            --sh1: 0 12px 30px rgba(45,106,79,0.1);
-            --fs: 'Instrument Serif', serif;
-            --fb: 'Figtree', sans-serif;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--fb); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
-
-        /* --- NAVIGATION --- */
-        nav {
-            position: fixed; top: 0; width: 100%; height: 70px; 
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(15px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 24px; border-bottom: 1px solid var(--border); z-index: 1000;
-        }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
-        .logo span { font-family: var(--fs); color: var(--green); font-style: italic; font-size: 1.2em; font-weight: 400; }
-        .nav-btns { display: flex; gap: 8px; }
-        .btn-nav { 
-            padding: 10px 16px; border-radius: 14px; border: none; 
-            font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
-        }
-        .btn-main { background: var(--green); color: white; }
-        .btn-alt { background: var(--text); color: white; }
-
-        /* --- PAGES --- */
-        .page { display: none; padding-top: 70px; min-height: 100vh; animation: fadeIn 0.4s ease forwards; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- HOME HERO --- */
-        .hero { padding: 60px 24px 20px; text-align: center; max-width: 800px; margin: 0 auto; }
-        .hero h1 { font-family: var(--fs); font-size: 54px; line-height: 0.9; font-weight: 400; margin-bottom: 16px; }
-        .hero h1 em { color: var(--green); font-style: italic; }
-        .hero p { color: var(--text2); font-size: 18px; margin-bottom: 32px; }
-
-        /* --- SEARCH & FILTERS --- */
-        .search-box {
-            position: relative; max-width: 500px; margin: 0 auto 40px;
-        }
-        .search-box input {
-            width: 100%; height: 64px; border-radius: 20px; border: 1px solid var(--border2);
-            padding: 0 60px 0 24px; font-size: 16px; font-family: var(--fb);
-            box-shadow: var(--sh1); outline: none;
-        }
-        .filters {
-            display: flex; gap: 10px; overflow-x: auto; padding: 0 24px 30px;
-            scrollbar-width: none; justify-content: center;
-        }
-        .filter-pill {
-            padding: 10px 22px; border-radius: 99px; background: white;
-            border: 1px solid var(--border); font-size: 14px; font-weight: 600;
-            white-space: nowrap; cursor: pointer; transition: 0.2s;
-        }
-        .filter-pill.active { background: var(--green); color: white; border-color: var(--green); }
-
-        /* --- STATS --- */
-        .stats-bar {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
-            padding: 0 24px 40px; max-width: 600px; margin: 0 auto;
-        }
-        .stat-card { background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .stat-num { font-family: var(--fs); font-size: 32px; color: var(--green); line-height: 1; }
-        .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; margin-top: 5px; }
-
-        /* --- LISTING --- */
-        .section-title { padding: 0 24px 16px; font-family: var(--fs); font-size: 28px; max-width: 700px; margin: 0 auto; }
-        .spots-grid { padding: 0 24px 100px; display: grid; gap: 12px; max-width: 700px; margin: 0 auto; }
-        .spot-card {
-            background: white; border: 1px solid var(--border); border-radius: var(--r);
-            padding: 18px; display: flex; align-items: center; gap: 16px;
-            cursor: pointer; transition: 0.2s;
-        }
-        .spot-card:hover { transform: translateY(-3px); box-shadow: var(--sh1); }
-        .spot-emoji { width: 56px; height: 56px; border-radius: 16px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .spot-info { flex: 1; }
-        .spot-name { font-weight: 700; font-size: 17px; margin-bottom: 2px; }
-        .spot-meta { font-size: 13px; color: var(--muted); }
-        .trust-badge {
-            font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 8px; text-transform: uppercase;
-        }
-        .reliable { background: var(--green-lt); color: var(--green); border: 1px solid var(--green-md); }
-        .declared { background: var(--yellow-lt); color: var(--yellow); border: 1px solid var(--yellow-md); }
-
-        /* --- MAP PAGE --- */
-        #map-container { height: calc(100vh - 70px); width: 100%; position: relative; }
-        #map { height: 100%; width: 100%; z-index: 1; }
-
-        /* --- BOTTOM SHEETS --- */
-        .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
-            z-index: 2000; display: none; opacity: 0; transition: 0.3s;
-        }
-        .sheet {
-            position: fixed; bottom: 0; left: 0; right: 0; background: white;
-            z-index: 2001; border-radius: 32px 32px 0 0; padding: 20px 24px 40px;
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            max-width: 600px; margin: 0 auto;
-        }
-        .sheet.active { transform: translateY(0); }
-        .overlay.active { display: block; opacity: 1; }
-        .handle { width: 40px; height: 5px; background: var(--border2); border-radius: 10px; margin: 0 auto 24px; }
-
-        /* --- FORM STYLING --- */
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text2); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--border2);
-            font-family: var(--fb); font-size: 15px; outline: none;
-        }
-        .btn-submit {
-            width: 100%; padding: 18px; border-radius: 18px; border: none;
-            background: var(--green); color: white; font-weight: 700; font-size: 16px;
-            margin-top: 10px; cursor: pointer;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 42px; }
-            .filters { justify-content: flex-start; }
-            .stats-bar { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CICERO Halal Roma — Guida Halal di Roma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<!-- Supabase and Leaflet integration -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --bg:#F7F6F2;--bg2:#FFFFFF;--bg3:#F0EFE9;
+  --border:#E5E3DB;--border2:#D0CEC4;
+  --text:#1A1A18;--text2:#4A4A44;--muted:#8A8A82;
+  --green:#1B8A4C;--green-lt:#E8F5EE;--green-md:#C2E5D0;--green-viv:#00C853;
+  --yellow:#C47D0A;--yellow-lt:#FEF6E4;--yellow-md:#F9DFA0;
+  --red:#C0392B;--red-lt:#FDECEA;--red-md:#F5C6C2;
+  --grey-lt:#F0EFE9;
+  --r:18px;--rsm:12px;
+  --sh0:0 2px 8px rgba(0,0,0,.06);--sh1:0 6px 24px rgba(0,0,0,.10);--sh2:0 16px 48px rgba(0,0,0,.16);
+  --fs:'Instrument Serif',Georgia,serif;--fb:'Figtree',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+button{cursor:pointer;font-family:var(--fb);border:none;outline:none;background:none;}
+input,textarea,select{font-family:var(--fb);}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+/* Nav bar styling */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(247,246,242,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}  
+.nbrand{display:flex;align-items:center;gap:8px;}  
+.nicon{width:30px;height:30px;border-radius:9px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;}  
+.nname{font-size:16px;font-weight:800;letter-spacing:-.3px;}  
+.nname span{color:var(--green);}  
+.nlive{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);font-size:10px;font-weight:700;color:var(--green);}  
+.ldot{width:5px;height:5px;border-radius:99px;background:var(--green-viv);animation:blink 2s infinite;}  
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}  
+.nlinks{display:flex;gap:4px;}  
+.nlnk{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--muted);transition:all .18s;}  
+.nlnk:hover,.nlnk.active{background:var(--bg3);color:var(--text);}  
+.nlnk.active{color:var(--green);}  
+.nadd{padding:7px 14px;border-radius:99px;background:var(--green);color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(27,138,76,.22);transition:all .18s;}  
+.nadd:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,138,76,.35);}  
+/* Pages */
+.page{display:none;padding-top:56px;min-height:100vh;}
+.page.active{display:block;animation:pin .28s ease;}
+@keyframes pin{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+/* Home layout */
+.htop{max-width:680px;margin:0 auto;padding:28px 16px 0;}
+.heyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px;}
+.hh1{font-family:var(--fs);font-size:clamp(30px,7vw,44px);line-height:1.08;letter-spacing:-.5px;margin-bottom:6px;}
+.hh1 em{font-style:italic;color:var(--green);}  
+.hsub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}  
+.sbar{display:flex;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--sh0);margin-bottom:14px;transition:border-color .2s,box-shadow .2s;}  
+.sbar:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,138,76,.1);}  
+.sico{padding:0 14px;color:var(--muted);font-size:17px;flex-shrink:0;}  
+.sinp{flex:1;padding:13px 0;background:none;border:none;outline:none;font-size:14px;color:var(--text);}  
+.sinp::placeholder{color:var(--muted);}  
+.sbtn{padding:9px 14px;margin:4px;background:var(--green);color:#fff;font-size:13px;font-weight:700;border-radius:10px;transition:background .18s;}  
+.sbtn:hover{background:#167040;}  
+.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:0 16px 2px;max-width:680px;margin:0 auto 22px;}  
+.filters::-webkit-scrollbar{display:none;}  
+.fp{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:99px;background:var(--bg2);border:1.5px solid var(--border);font-size:13px;font-weight:600;color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .18s;}  
+.fp:hover{border-color:var(--green);color:var(--green);}  
+.fp.active{background:var(--green);border-color:var(--green);color:#fff;}  
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:680px;margin:0 auto 26px;padding:0 16px;}  
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:14px 8px;text-align:center;box-shadow:var(--sh0);}  
+.scn{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}  
+.scl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}  
+.sec{max-width:680px;margin:0 auto;padding:0 16px 28px;}  
+.secrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}  
+.sectit{font-size:17px;font-weight:800;letter-spacing:-.3px;}  
+.secmore{font-size:13px;font-weight:700;color:var(--green);cursor:pointer;}  
+/* Legend card */
+.lgcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}  
+.lgtit{font-size:14px;font-weight:800;margin-bottom:4px;}  
+.lgsub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}  
+.lgrows{display:flex;flex-direction:column;gap:10px;}  
+.lgrow{display:flex;align-items:flex-start;gap:10px;}  
+.lgdot{width:10px;height:10px;border-radius:99px;flex-shrink:0;margin-top:4px;}  
+.lglabel{font-size:13px;font-weight:700;margin-bottom:1px;}  
+.lgdesc{font-size:12px;color:var(--muted);line-height:1.4;}  
+.lgdisc{margin-top:14px;padding:10px 12px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:var(--rsm);font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;}  
+/* Spot cards */
+.spots{display:flex;flex-direction:column;gap:10px;}  
+.scard{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s;box-shadow:var(--sh0);}  
+.scard:hover{border-color:var(--green-md);box-shadow:var(--sh1);transform:translateY(-1px);}  
+.scimg{width:54px;height:54px;border-radius:13px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}  
+.scbody{flex:1;min-width:0;}  
+.scname{font-size:15px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}  
+.scmeta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-bottom:6px;}  
+.mdot{width:3px;height:3px;border-radius:99px;background:var(--muted);flex-shrink:0;}  
+.mrat{color:var(--yellow);font-weight:700;}  
+.stags{display:flex;gap:5px;flex-wrap:wrap;}  
+.stag{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}  
+.stag.g{background:var(--green-lt);color:var(--green);border-color:var(--green-md);}  
+.stag.r{background:var(--red-lt);color:var(--red);border-color:var(--red-md);}  
+.sbadge{flex-shrink:0;padding:5px 10px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}  
+.sbr{background:var(--green);color:#fff;}  
+.sbd{background:var(--yellow-lt);color:var(--yellow);border:1.5px solid var(--yellow-md);}  
+.sbu{background:var(--grey-lt);color:var(--muted);border:1.5px solid var(--border);}  
+.sbw{background:var(--red-lt);color:var(--red);border:1.5px solid var(--red-md);}  
+/* Map page decorations */
+.mapwrap{width:100%;height:calc(100vh - 56px);background:#EFF6F2;position:relative;overflow:hidden;}  
+.mapbg{position:absolute;inset:0;background-color:#EFF6F2;background-image:linear-gradient(rgba(27,138,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(27,138,76,.04) 1px,transparent 1px);background-size:36px 36px;}  
+.mrd{position:absolute;background:rgba(255,255,255,.85);border-radius:3px;}  
+.mriver{position:absolute;background:rgba(100,185,220,.3);border-radius:40px;}  
+.mzone{position:absolute;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(27,138,76,.45);transform:translate(-50%,-50%);pointer-events:none;}  
+/* mini map */
+.mmap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;height:160px;position:relative;cursor:pointer;box-shadow:var(--sh0);}  
+.mmov{position:absolute;inset:0;background:rgba(27,138,76,.07);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}  
+.mmcta{padding:9px 18px;background:var(--green);color:#fff;font-weight:700;font-size:13px;border-radius:99px;box-shadow:0 4px 14px rgba(27,138,76,.4);}  
+.mmlabel{position:absolute;bottom:8px;left:8px;padding:3px 9px;background:rgba(255,255,255,.9);border-radius:99px;font-size:10px;font-weight:700;border:1px solid var(--border);}  
+/* bottom sheet */
+.bsov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .28s;}  
+.bsov.open{opacity:1;pointer-events:all;}  
+.bs{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);max-width:640px;margin:0 auto;box-shadow:0 -8px 40px rgba(0,0,0,.12);}  
+.bs.open{transform:translateY(0);}  
+.bshandle{width:34px;height:4px;border-radius:99px;background:var(--border2);margin:12px auto 0;}  
+.bsh{padding:18px 18px 0;}  
+/* add page form */
+.addwrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}  
+.addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}  
+.addsub{font-size:14px;color:var(--muted);margin-bottom:24px;}  
+.goldrule{padding:12px 14px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rsm);font-size:12px;color:var(--green);font-weight:600;line-height:1.5;margin-bottom:22px;}  
+/* toast */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:400;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}  
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}  
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}  
+.flogo{font-size:15px;font-weight:800;margin-bottom:8px;}  
+.flogo span{color:var(--green);}  
+.fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}  
+.fdisc strong{color:var(--yellow);}  
+.fcopy{font-size:11px;color:var(--border2);}  
+@media(max-width:580px){.nlinks{display:none;} .stats{grid-template-columns:repeat(2,1fr);} .mapleg{display:none;} }
+</style>
 </head>
 <body>
-
-    <nav>
-        <div class="logo">
-            <div style="background:var(--green); color:white; width:32px; height:32px; border-radius:8px; display:grid; place-items:center;">🕌</div>
-            <div>CICERO <span>Halal Roma</span></div>
-        </div>
-        <div class="nav-btns">
-            <button class="btn-nav btn-alt" onclick="showPage('map')">Mappa</button>
-            <button class="btn-nav btn-main" onclick="openSheet('addSheet')">+ Aggiungi</button>
-        </div>
-    </nav>
-
-    <!-- HOME PAGE -->
-    <main id="home" class="page active">
-        <section class="hero">
-            <h1>Mangiare Halal a Roma,<br><em>senza compromessi.</em></h1>
-            <p>La selezione d'élite curata dalla community musulmana locale.</p>
-            
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Cerca per nome o cucina..." oninput="filterPlaces()">
-            </div>
-        </section>
-
-        <div class="filters">
-            <button class="filter-pill active" onclick="setCategory('All', this)">Tutti</button>
-            <button class="filter-pill" onclick="setCategory('Ristorante', this)">Ristoranti</button>
-            <button class="filter-pill" onclick="setCategory('Street Food', this)">Street Food</button>
-            <button class="filter-pill" onclick="setCategory('Macelleria', this)">Macellerie</button>
-        </div>
-
-        <div class="stats-bar" id="statsContainer">
-            <!-- Stats loaded by JS -->
-        </div>
-
-        <h2 class="section-title">Spot Verificati</h2>
-        <div class="spots-grid" id="placesList">
-            <!-- Places loaded by JS -->
-        </div>
-    </main>
-
-    <!-- MAP PAGE -->
-    <main id="map-page" class="page">
-        <div id="map-container">
-            <div id="map"></div>
-        </div>
-    </main>
-
-    <!-- OVERLAY & SHEETS -->
-    <div class="overlay" id="overlay" onclick="closeAllSheets()"></div>
-
-    <!-- DETAIL SHEET -->
-    <div class="sheet" id="detailSheet">
-        <div class="handle"></div>
-        <div id="detailContent"></div>
+<div class="toast" id="toast"></div>
+<nav>
+  <div class="nbrand">
+    <div class="nicon">🕌</div>
+    <div class="nname">CICERO <span>Halal Roma</span></div>
+    <div class="nlive"><div class="ldot"></div> Database Live</div>
+  </div>
+  <div class="nlinks">
+    <button class="nlnk active" onclick="goPage('home')">Home</button>
+    <button class="nlnk" onclick="goPage('map')">Mappa</button>
+    <button class="nlnk" onclick="goPage('add')">Segnala</button>
+  </div>
+  <button class="nadd" onclick="goPage('add')">+ Aggiungi</button>
+</nav>
+<!-- Home Page -->
+<div class="page active" id="page-home">
+  <div class="htop">
+    <div class="heyebrow">🕌 Roma · Guida Halal</div>
+    <h1 class="hh1">CICERO Halal Roma,<br/><em>costruita insieme.</em></h1>
+    <p class="hsub">Dai musulmani, per i musulmani. Ristoranti, street food, macellerie e moschee — con trasparenza sul livello di affidabilità.</p>
+    <div class="sbar">
+      <div class="sico">🔍</div>
+      <input class="sinp" id="srch" type="text" placeholder="Cerca zona, cucina, locale…" oninput="renderSpots()"/>
+      <button class="sbtn" onclick="goPage('map')">Cerca</button>
     </div>
-
-    <!-- ADD SHEET -->
-    <div class="sheet" id="addSheet">
-        <div class="handle"></div>
-        <h2 style="font-family: var(--fs); font-size: 32px; margin-bottom: 20px;">Segnala un locale</h2>
-        <form id="addForm">
-            <div class="form-group">
-                <label>Nome Locale</label>
-                <input type="text" id="newName" required placeholder="Es: Ali Babà">
-            </div>
-            <div class="form-group">
-                <label>Indirizzo (Roma)</label>
-                <input type="text" id="newAddress" required placeholder="Via dei Condotti, 1">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="newCat">
-                        <option>Ristorante</option>
-                        <option>Street Food</option>
-                        <option>Macelleria</option>
-                        <option>Altro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Emoji</label>
-                    <input type="text" id="newEmoji" placeholder="🥙">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Stato Halal</label>
-                <select id="newStatus">
-                    <option value="declared">Dichiarato dal proprietario</option>
-                    <option value="reliable">Certificato / Verificato</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-submit" id="submitBtn">Invia Segnalazione</button>
-        </form>
+  </div>
+  <div class="filters">
+    <button class="fp active" onclick="setF('all', this)">🍽 Tutti</button>
+    <button class="fp" onclick="setF('ristorante', this)">🥘 Ristoranti</button>
+    <button class="fp" onclick="setF('street food', this)">🌯 Street food</button>
+    <button class="fp" onclick="setF('macelleria', this)">🥩 Macellerie</button>
+    <button class="fp" onclick="setF('moschea', this)">🕌 Moschee</button>
+    <button class="fp" onclick="setF('mosque', this)">📍 Vicino moschea</button>
+  </div>
+  <div class="stats" id="statsGrid"></div>
+  <div class="sec">
+    <div class="secrow">
+      <div class="sectit">Come funziona l'affidabilità</div>
     </div>
-
-    <script>
-        // CONFIGURAZIONE SUPABASE
-        const SB_URL = "https://fmaildvceklzfulgzujt.supabase.co";
-        const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYWlsZHZjZWtsemZ1bGd6dWp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDY0NTQsImV4cCI6MjA5MzIyMjQ1NH0.X7vc5gZFSfwsJVE-h3rMp5FBNLlFpB-reGCx0PjXBh8";
-        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
-
-        let allPlaces = [];
-        let currentCategory = 'All';
-        let map;
-        let markers = [];
-
-        // INIZIALIZZAZIONE
-        async function init() {
-            await loadData();
-            initMap();
-            showPage('home');
-        }
-
-        async function loadData() {
-            const { data, error } = await supabase.from('places').select('*').order('created_at', { ascending: false });
-            if (error) { console.error(error); return; }
-            allPlaces = data;
-            renderStats();
-            renderPlaces();
-        }
-
-        function renderStats() {
-            const reliable = allPlaces.filter(p => p.halal_status === 'reliable').length;
-            const container = document.getElementById('statsContainer');
-            container.innerHTML = `
-                <div class="stat-card"><div class="stat-num">${allPlaces.length}</div><div class="stat-label">Locali</div></div>
-                <div class="stat-card"><div class="stat-num">${reliable}</div><div class="stat-label">Certificati</div></div>
-                <div class="stat-card"><div class="stat-num">Roma</div><div class="stat-label">Copertura</div></div>
-            `;
-        }
-
-        function renderPlaces() {
-            const container = document.getElementById('placesList');
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            
-            const filtered = allPlaces.filter(p => {
-                const matchesCat = currentCategory === 'All' || p.category === currentCategory;
-                const matchesSearch = p.name.toLowerCase().includes(query) || p.address.toLowerCase().includes(query);
-                return matchesCat && matchesSearch;
-            });
-
-            container.innerHTML = filtered.map(p => `
-                <div class="spot-card" onclick="showDetails(${p.id})">
-                    <div class="spot-emoji">${p.emoji || '📍'}</div>
-                    <div class="spot-info">
-                        <div class="spot-name">${p.name}</div>
-                        <div class="spot-meta">${p.category} • ${p.address.substring(0, 30)}...</div>
-                    </div>
-                    <div class="trust-badge ${p.halal_status === 'reliable' ? 'reliable' : 'declared'}">
-                        ${p.halal_status === 'reliable' ? 'Verificato' : 'Dichiarato'}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function showDetails(id) {
-            const p = allPlaces.find(x => x.id === id);
-            const statusLabel = p.halal_status === 'reliable' ? 'Altamente Affidabile' : 'Dichiarato dal gestore';
-            const statusClass = p.halal_status === 'reliable' ? 'reliable' : 'declared';
-
-            document.getElementById('detailContent').innerHTML = `
-                <div style="text-align:center; margin-bottom:20px;">
-                    <div style="font-size:50px; margin-bottom:10px;">${p.emoji || '📍'}</div>
-                    <h2 style="font-family:var(--fs); font-size:38px; line-height:1;">${p.name}</h2>
-                    <p style="color:var(--muted); font-weight:600;">${p.category.toUpperCase()}</p>
-                </div>
-                
-                <div style="background:var(--bg); padding:20px; border-radius:20px; margin-bottom:20px; border:1px solid var(--border);">
-                    <div style="font-size:12px; text-transform:uppercase; font-weight:800; color:var(--muted); margin-bottom:5px;">Indirizzo</div>
-                    <div style="font-weight:600;">${p.address}</div>
-                </div>
-
-                <div class="trust-badge ${statusClass}" style="display:block; text-align:center; padding:15px; font-size:14px; margin-bottom:25px;">
-                   Status: ${statusLabel}
-                </div>
-
-                <button class="btn-submit" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}')">
-                    Apri in Google Maps
-                </button>
-            `;
-            openSheet('detailSheet');
-        }
-
-        // MAP LOGIC
-        function initMap() {
-            map = L.map('map', { zoomControl: false }).setView([41.8919, 12.5113], 12);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '©OpenStreetMap'
-            }).addTo(map);
-        }
-
-        function updateMarkers() {
-            markers.forEach(m => map.removeLayer(m));
-            markers = [];
-
-            allPlaces.forEach(p => {
-                if (p.lat && p.lng) {
-                    const color = p.halal_status === 'reliable' ? '#2D6A4F' : '#B5832D';
-                    const customIcon = L.divIcon({
-                        className: 'custom-pin',
-                        html: `<div style="background:${color}; width:34px; height:34px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:2px solid white; display:flex; align-items:center; justify-content:center; box-shadow:var(--sh1);">
-                                <div style="transform:rotate(45deg); font-size:16px;">${p.emoji || '📍'}</div>
-                               </div>`,
-                        iconSize: [34, 34],
-                        iconAnchor: [17, 34]
-                    });
-
-                    const m = L.marker([p.lat, p.lng], { icon: customIcon })
-                        .addTo(map)
-                        .on('click', () => showDetails(p.id));
-                    markers.push(m);
-                }
-            });
-        }
-
-        // NAVIGATION & UI
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id === 'home' ? 'home' : 'map-page').classList.add('active');
-            if (id === 'map') {
-                setTimeout(() => {
-                    map.invalidateSize();
-                    updateMarkers();
-                }, 100);
-            }
-        }
-
-        function openSheet(id) {
-            document.getElementById('overlay').classList.add('active');
-            document.getElementById(id).classList.add('active');
-        }
-
-        function closeAllSheets() {
-            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
-            document.getElementById('overlay').classList.remove('active');
-        }
-
-        function setCategory(cat, el) {
-            currentCategory = cat;
-            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            renderPlaces();
-        }
-
-        function filterPlaces() { renderPlaces(); }
-
-        // FORM SUBMIT
-        document.getElementById('addForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = "Invio in corso...";
-            btn.disabled = true;
-
-            const newPlace = {
-                name: document.getElementById('newName').value,
-                address: document.getElementById('newAddress').value,
-                category: document.getElementById('newCat').value,
-                emoji: document.getElementById('newEmoji').value || '📍',
-                halal_status: document.getElementById('newStatus').value,
-                lat: 41.89, // Default per demo, andrebbe geocodificato
-                lng: 12.51
-            };
-
-            const { error } = await supabase.from('places').insert([newPlace]);
-            
-            if (error) {
-                alert("Errore nell'invio. Riprova.");
-                btn.innerText = "Invia Segnalazione";
-                btn.disabled = false;
-            } else {
-                alert("Grazie! Il locale verrà verificato a breve.");
-                closeAllSheets();
-                loadData();
-                document.getElementById('addForm').reset();
-                btn.innerText = "Invia Segnalazione";
-                btn.disabled = false;
-            }
-        };
-
-        // Boot
-        init();
-    </script>
+    <div class="lgcard">
+      <div class="lgtit">Cosa significano i badge</div>
+      <div class="lgsub">CICERO Halal Roma <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
+      <div class="lgrows">
+        <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti (HalalTrip, Zabihah, community verificata)</div></div></div>
+        <div class="lgrow"><div class="lgdot" style="background:#E6A817"></div><div><div class="lglabel" style="color:var(--yellow)">📋 Dichiarato dal locale</div><div class="lgdesc">Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.</div></div></div>
+        <div class="lgrow"><div class="lgdot" style="background:var(--muted)"></div><div><div class="lglabel" style="color:var(--muted)">❓ Non verificato</div><div class="lgdesc">Segnalato dalla community ma senza conferme. Verifica direttamente con il locale prima di ordinare.</div></div></div>
+        <div class="lgrow"><div class="lgdot" style="background:var(--red)"></div><div><div class="lglabel" style="color:var(--red)">⚠️ Segnalazioni dubbie</div><div class="lgdesc">Utenti hanno riportato problemi di conformità halal. Prestare particolare attenzione.</div></div></div>
+      </div>
+      <div class="lgdisc">⚠ CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="secrow"><div class="sectit">Spot consigliati</div><div class="secmore" onclick="goPage('map')">Vedi sulla mappa →</div></div>
+    <div class="spots" id="spotsGrid"></div>
+  </div>
+  <div class="sec">
+    <div class="secrow"><div class="sectit">Mappa veloce</div><div class="secmore" onclick="goPage('map')">Apri mappa →</div></div>
+    <div class="mmap" onclick="goPage('map')">
+      <div class="mmbg">
+        <div class="mmroad" style="top:35%;left:0;right:0;height:12px;"></div>
+        <div class="mmroad" style="top:60%;left:0;right:0;height:8px;"></div>
+        <div class="mmroad" style="top:0;bottom:0;left:30%;width:10px;"></div>
+        <div class="mmroad" style="top:0;bottom:0;left:62%;width:8px;"></div>
+        <div id="mmPins"></div>
+      </div>
+      <div class="mmov"><div class="mmcta">🗺 Apri mappa completa</div></div>
+      <div class="mmlabel" id="miniCount">Roma · 0 spot halal</div>
+    </div>
+  </div>
+  <footer>
+    <div class="flogo">CICERO <span>Halal Roma</span></div>
+    <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="fcopy">© 2026 CICERO Halal Roma — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
+  </footer>
+</div>
+<!-- Map Page -->
+<div class="page" id="page-map">
+  <div class="mapwrap">
+    <div class="mapbg"></div>
+    <!-- Insert real map container -->
+    <div id="realMap" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;"></div>
+    <!-- Decorative elements remain -->
+    <div class="mrd" style="top:28%;left:0;right:0;height:16px;"></div>
+    <div class="mrd" style="top:50%;left:0;right:0;height:10px;"></div>
+    <div class="mrd" style="top:68%;left:0;right:0;height:12px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:22%;width:12px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:50%;width:10px;"></div>
+    <div class="mrd" style="top:0;bottom:0;left:72%;width:8px;"></div>
+    <div class="mrd" style="top:15%;left:5%;right:50%;height:7px;transform:rotate(4deg);"></div>
+    <div class="mriver" style="top:20%;left:14%;width:8%;height:70%;transform:rotate(8deg);"></div>
+    <div class="mzone" style="top:22%;left:13%">Prati</div>
+    <div class="mzone" style="top:55%;left:46%">Trastevere</div>
+    <div class="mzone" style="top:33%;left:62%">Esquilino</div>
+    <div class="mzone" style="top:17%;left:58%">Termini</div>
+    <div class="mzone" style="top:74%;left:66%">Ostiense</div>
+    <div id="mapPins"></div>
+    <div class="mapsrch">
+      <input class="msinp" id="mapSearch" placeholder="🔍  Cerca in mappa…" oninput="renderLeafletMarkers()"/>
+      <button class="msgo" onclick="renderLeafletMarkers()">Vai</button>
+    </div>
+    <div class="mapleg">
+      <div class="mltit">Livello affidabilità</div>
+      <div class="mlrow"><div class="mldot" style="background:var(--green)"></div><div><div class="mllabel">Più fonti concordano</div><div class="mldesc">Verificato da fonti pubbliche</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:#E6A817"></div><div><div class="mllabel">Dichiarato dal locale</div><div class="mldesc">Non verificato da terzi</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:var(--muted)"></div><div><div class="mllabel">Non verificato</div><div class="mldesc">Verifica con il locale</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:var(--red)"></div><div><div class="mllabel">Segnalazioni dubbie</div><div class="mldesc">Prestare attenzione</div></div></div>
+    </div>
+    <div class="mapzoom">
+      <button class="mzbtn" onclick="mapZoom(1)">+</button>
+      <button class="mzbtn" onclick="mapZoom(-1)">−</button>
+    </div>
+    <div class="mapfoot">⚠ CICERO Halal Roma non certifica i locali — verifica sempre direttamente con il ristoratore</div>
+  </div>
+</div>
+<!-- Add Page -->
+<div class="page" id="page-add">
+  <div class="addwrap">
+    <div class="addh">Aggiungi uno spot</div>
+    <p class="addsub">Aiuta la community. Le segnalazioni vengono revisionate prima della pubblicazione.</p>
+    <div class="goldrule">🌿 <strong>Regola d'oro:</strong> non scrivere "certificato halal" se non hai una prova concreta. Usa "dichiarato" o "non verificato" — la community ti ringrazierà.</div>
+    <div class="fg"><label class="fl">Nome del locale *</label><input class="fi" id="fName" type="text" placeholder="Es. Al Madina Kebab" /></div>
+    <div class="fg"><label class="fl">Indirizzo *</label><input class="fi" id="fAddress" type="text" placeholder="Via Roma 42, 00100 Roma RM" /></div>
+    <div class="fg">
+      <label class="fl">Categoria *</label>
+      <div class="fselw"><select class="fsel" id="fCategory"><option>Ristorante</option><option>Street food</option><option>Macelleria</option><option>Pizzeria</option><option>Supermercato</option><option>Caffè / Bakery</option><option>Moschea</option></select></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Stato halal *</label>
+      <div class="sgrid">
+        <div class="sopt" onclick="pickS('reliable', this)"><div class="soptd" style="background:var(--green)"></div><div><div class="soptl">Più fonti concordano</div><div class="sopts">Confermato da fonti pubbliche</div></div></div>
+        <div class="sopt" onclick="pickS('declared', this)"><div class="soptd" style="background:#E6A817"></div><div><div class="soptl">Dichiarato dal locale</div><div class="sopts">Il gestore afferma halal</div></div></div>
+        <div class="sopt" onclick="pickS('unknown', this)"><div class="soptd" style="background:var(--muted)"></div><div><div class="soptl">Non verificato</div><div class="sopts">Nessuna info certa</div></div></div>
+        <div class="sopt" onclick="pickS('warning', this)"><div class="soptd" style="background:var(--red)"></div><div><div class="soptl">Segnalazioni dubbie</div><div class="sopts">Ho dubbi o prove contrarie</div></div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Note aggiuntive</label><textarea class="fta" id="fNote" placeholder="Certifica da quale organizzazione? Solo carne? Alcol nel menù?…"></textarea></div>
+    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" id="fSource" type="text" placeholder="Es. HalalTrip, visita personale, Zabihah…" /></div>
+    <button class="fsub" onclick="submitForm()">Invia segnalazione →</button>
+  </div>
+</div>
+<!-- Bottom sheet -->
+<div class="bsov" id="bsov" onclick="closeBS()"></div>
+<div class="bs" id="bs">
+  <div class="bshandle"></div>
+  <div id="bsContent"></div>
+</div>
+<script>
+// Supabase credentials
+const SUPABASE_URL = "https://fmaildvceklzfulgzujt.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYWlsZHZjZWtsemZ1bGd6dWp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDY0NTQsImV4cCI6MjA5MzIyMjQ1NH0.X7vc5gZFSfwsJVE-h3rMp5FBNLlFpB-reGCx0PjXBh8";
+// Create Supabase client
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Data array
+let P = [];
+let activeF = 'all';
+let map;
+// Normalize place objects
+function normalizePlace(p) {
+  return {
+    ...p,
+    status: p.halal_status || 'unknown',
+    nm: Boolean(p.near_mosque),
+    rating: p.rating || 0,
+    reviews: p.reviews || 0,
+    emoji: p.emoji || '📍',
+    price: p.price || '€',
+    cuisine: p.cuisine || '—',
+    category: (p.category || 'ristorante').toLowerCase(),
+    lat: p.lat != null ? Number(p.lat) : null,
+    lng: p.lng != null ? Number(p.lng) : null,
+    mx: null,
+    my: null
+  };
+}
+// Compute relative positions for mini map pins
+function computePositions() {
+  const valid = P.filter(p => p.lat != null && p.lng != null);
+  if (!valid.length) return;
+  const lats = valid.map(p => p.lat);
+  const lngs = valid.map(p => p.lng);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+  P.forEach(p => {
+    if (p.lat != null && p.lng != null && maxLat !== minLat && maxLng !== minLng) {
+      const x = ((p.lng - minLng) / (maxLng - minLng)) * 100;
+      const y = (1 - (p.lat - minLat) / (maxLat - minLat)) * 100;
+      p.mx = x;
+      p.my = y;
+    } else {
+      p.mx = 50;
+      p.my = 50;
+    }
+  });
+  const miniLabel = document.getElementById('miniCount');
+  if (miniLabel) miniLabel.innerText = 'Roma · ' + P.length + ' spot halal';
+}
+// Load places from Supabase
+async function loadPlaces() {
+  const { data, error } = await supabaseClient.from('places').select('*').order('created_at', { ascending: false });
+  if (error) {
+    showToast('Database non disponibile');
+    return;
+  }
+  P = (data || []).map(normalizePlace);
+  computePositions();
+  renderStats();
+  renderSpots();
+  renderPins();
+  renderLeafletMarkers();
+}
+// Initialize Leaflet map
+function initMap() {
+  map = L.map('realMap', { zoomControl: false }).setView([41.9028, 12.4964], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+}
+// Render markers on the Leaflet map
+function renderLeafletMarkers() {
+  if (!map) return;
+  // remove existing markers
+  map.eachLayer(layer => {
+    if (layer instanceof L.Marker) map.removeLayer(layer);
+  });
+  const q = (document.getElementById('mapSearch')?.value || '').toLowerCase().trim();
+  P.forEach(p => {
+    if (!p.lat || !p.lng) return;
+    const searchTxt = [p.name, p.address, p.category, p.cuisine, p.source].join(' ').toLowerCase();
+    if (q && !searchTxt.includes(q)) return;
+    const marker = L.marker([p.lat, p.lng]).addTo(map);
+    marker.on('click', () => openBS(p.id));
+  });
+}
+// Show toast message
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+// Render statistics
+function renderStats() {
+  const t = P.length;
+  const r = P.filter(x => x.status === 'reliable').length;
+  const d = P.filter(x => x.status === 'declared').length;
+  const u = P.filter(x => x.status === 'unknown' || x.status === 'warning').length;
+  document.getElementById('statsGrid').innerHTML =
+    `<div class="sc"><div class="scn">${t}</div><div class="scl">Spot</div></div>` +
+    `<div class="sc"><div class="scn" style="color:var(--green)">${r}</div><div class="scl">Più fonti</div></div>` +
+    `<div class="sc"><div class="scn" style="color:var(--yellow)">${d}</div><div class="scl">Dichiarati</div></div>` +
+    `<div class="sc"><div class="scn" style="color:var(--muted)">${u}</div><div class="scl">Da verificare</div></div>`;
+}
+// Badge classes
+const BL = { reliable:'sbr', declared:'sbd', unknown:'sbu', warning:'sbw' };
+const BT = { reliable:'Più fonti', declared:'Dichiarato', unknown:'Non verif.', warning:'Dubbio' };
+// Render spots list
+function renderSpots() {
+  const q = (document.getElementById('srch')?.value || '').toLowerCase();
+  const filtered = P.filter(p => {
+    if (activeF === 'mosque') return p.nm;
+    if (activeF !== 'all' && !p.category.toLowerCase().includes(activeF)) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !p.cuisine.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('spotsGrid').innerHTML = filtered.map(p => {
+    return `<div class="scard" onclick="openBS(${p.id})">
+      <div class="scimg">${p.emoji}</div>
+      <div class="scbody"><div class="scname">${p.name}</div>
+        <div class="scmeta"><span class="mrat">★ ${p.rating || '—'}</span><span class="mdot"></span><span>${p.category}</span><span class="mdot"></span><span>${p.price}</span></div>
+        <div class="stags">
+          <span class="stag">${p.cuisine}</span>
+          ${p.alcohol ? '<span class="stag r">🍷 Alcol</span>' : '<span class="stag g">✓ No alcol</span>'}
+          ${p.nm ? '<span class="stag">🕌 Vicino moschea</span>' : ''}
+        </div>
+      </div>
+      <div class="sbadge ${BL[p.status] || 'sbu'}">${BT[p.status] || 'Non verif.'}</div>
+    </div>`;
+  }).join('');
+}
+// Render mini and full map pins using precomputed positions
+function renderPins() {
+  document.getElementById('mapPins').innerHTML = P.map(p => {
+    return `<div class="mpin ${p.status}" style="left:${p.mx}%;top:${p.my}%" onclick="openBS(${p.id})" title="${p.name}"><div class="mpinb"><span>${p.emoji}</span></div><div class="mpint"></div></div>`;
+  }).join('');
+  document.getElementById('mmPins').innerHTML = P.slice(0,12).map(p => {
+    return `<div class="mmpin ${p.status}" style="left:${p.mx}%;top:${p.my}%;background:${p.status==='reliable'?'var(--green)':p.status==='declared'?'#E6A817':p.status==='warning'?'var(--red)':'var(--muted)'}">${p.emoji}</div>`;
+  }).join('');
+}
+// Open bottom sheet
+function openBS(id) {
+  const p = P.find(x => x.id === id);
+  if (!p) return;
+  const st = TRUST[p.status] || TRUST['unknown'];
+  document.getElementById('bsContent').innerHTML = `
+    <div class="bsh">
+      <div class="bshcat">${p.category} · ${p.cuisine}</div>
+      <div class="bshname">${p.name}</div>
+      <div class="bshmeta"><span class="bshrat">★ ${p.rating || '—'}</span><span>(${p.reviews || 0} rec.)</span><span>·</span><span>${p.price}</span><span>·</span><span>${p.address}</span></div>
+    </div>
+    <div class="tblock ${st.cls}">
+      <div class="ticon">${st.icon}</div>
+      <div><div class="tlabel" style="color:${st.color}">${st.label}</div><div class="tmeaning">${st.meaning}</div><div class="tnote">${st.note}</div></div>
+    </div>
+    <div class="bshgrid">
+      <div class="bshcell"><div class="cl">Cucina</div><div class="cv">${p.cuisine}</div></div>
+      <div class="bshcell"><div class="cl">Prezzo</div><div class="cv">${p.price}</div></div>
+      <div class="bshcell"><div class="cl">Alcol</div><div class="cv ${p.alcohol?'r':'g'}">${p.alcohol?'⚠ Sì':'✓ No'}</div></div>
+      <div class="bshcell"><div class="cl">Stato</div><div class="cv" style="color:${st.color}">${st.short}</div></div>
+    </div>
+    <div class="relwrap">
+      <div class="reltit">Livello di affidabilità informazione</div>
+      <div class="reltrack"><div class="relfill" id="relfill" style="width:0;background:${st.color}"></div></div>
+      <div class="relfoot">Basato su fonti pubbliche e segnalazioni community</div>
+    </div>
+    <div class="bshsrc"><span>📌</span><span>${p.source || 'Segnalazione community'}</span></div>
+    <div class="bshdisc">⚠ CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="bshacts">
+      <button class="bact pri" onclick="openMaps('${encodeURIComponent(p.address)}')">🗺 Indicazioni</button>
+      <button class="bact sec" onclick="goPage('add');closeBS()">⚠ Segnala</button>
+    </div>`;
+  document.getElementById('bsov').classList.add('open');
+  document.getElementById('bs').classList.add('open');
+  setTimeout(() => { const f=document.getElementById('relfill'); if(f) f.style.width = st.bar; }, 120);
+}
+// open Google Maps
+function openMaps(q) {
+  const url = `https://www.google.com/maps/search/?api=1&query=${q}`;
+  window.open(url, '_blank');
+}
+// Close bottom sheet
+function closeBS() {
+  document.getElementById('bsov').classList.remove('open');
+  document.getElementById('bs').classList.remove('open');
+}
+// Pagination between pages
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nlnk').forEach(b => b.classList.remove('active'));
+  const idx = { home:0, map:1, add:2 }[name];
+  const btn = document.querySelectorAll('.nlnk')[idx];
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+  if (name === 'map' && map) {
+    setTimeout(() => { map.invalidateSize(); renderLeafletMarkers(); }, 120);
+  }
+}
+// Set filter
+function setF(f, el) {
+  activeF = f;
+  document.querySelectorAll('.fp').forEach(btn => btn.classList.remove('active'));
+  el.classList.add('active');
+  renderSpots();
+}
+// Pick status in form
+let selectedStatus = 'unknown';
+function pickS(status, el) {
+  selectedStatus = status;
+  document.querySelectorAll('.sopt').forEach(o => o.className = 'sopt');
+  el.classList.add('sel-' + status);
+}
+// Zoom controls
+function mapZoom(dir) {
+  if (!map) return;
+  const current = map.getZoom();
+  map.setZoom(current + dir);
+}
+// Submit new place
+async function submitForm() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { showToast('Inserisci il nome del locale'); return; }
+  const address = document.getElementById('fAddress').value.trim() || 'Roma';
+  const category = document.getElementById('fCategory').value;
+  const note = document.getElementById('fNote').value.trim();
+  const source = document.getElementById('fSource').value.trim() || 'Segnalazione community';
+  const newLat = 41.9028 + (Math.random() - 0.5) * 0.05;
+  const newLng = 12.4964 + (Math.random() - 0.5) * 0.05;
+  const newPlace = {
+    name: name,
+    address: address,
+    category: category,
+    cuisine: note || '—',
+    price: '€',
+    alcohol: false,
+    halal_status: selectedStatus,
+    source: source,
+    rating: 0,
+    reviews: 0,
+    lat: newLat,
+    lng: newLng,
+    emoji: '📍',
+    near_mosque: false,
+    created_at: new Date().toISOString()
+  };
+  try {
+    const { error } = await supabaseClient.from('places').insert([newPlace]);
+    if (error) throw error;
+    showToast('✓ Salvato su Supabase');
+    // clear form
+    document.getElementById('fName').value = '';
+    document.getElementById('fAddress').value = '';
+    document.getElementById('fNote').value = '';
+    document.getElementById('fSource').value = '';
+    document.getElementById('fCategory').value = 'Ristorante';
+    selectedStatus = 'unknown';
+    document.querySelectorAll('.sopt').forEach(o => o.className = 'sopt');
+    await loadPlaces();
+    goPage('home');
+  } catch (err) {
+    showToast('Errore inserimento');
+  }
+}
+// Initialize application
+document.addEventListener('DOMContentLoaded', async () => {
+  initMap();
+  await loadPlaces();
+});
+</script>
 </body>
 </html>
-
