@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CICERO Halal Roma — Guida Halal di Roma</title>
+<title>CICERO HALAL — Guida Halal di Roma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<!-- Supabase and Leaflet integration -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -30,122 +28,263 @@ button{cursor:pointer;font-family:var(--fb);border:none;outline:none;background:
 input,textarea,select{font-family:var(--fb);}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
-/* Nav bar styling */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(247,246,242,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}  
-.nbrand{display:flex;align-items:center;gap:8px;}  
-.nicon{width:30px;height:30px;border-radius:9px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;}  
-.nname{font-size:16px;font-weight:800;letter-spacing:-.3px;}  
-.nname span{color:var(--green);}  
-.nlive{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);font-size:10px;font-weight:700;color:var(--green);}  
-.ldot{width:5px;height:5px;border-radius:99px;background:var(--green-viv);animation:blink 2s infinite;}  
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}  
-.nlinks{display:flex;gap:4px;}  
-.nlnk{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--muted);transition:all .18s;}  
-.nlnk:hover,.nlnk.active{background:var(--bg3);color:var(--text);}  
-.nlnk.active{color:var(--green);}  
-.nadd{padding:7px 14px;border-radius:99px;background:var(--green);color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(27,138,76,.22);transition:all .18s;}  
-.nadd:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,138,76,.35);}  
-/* Pages */
-.page{display:none;padding-top:56px;min-height:100vh;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(247,246,242,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nbrand{display:flex;align-items:center;gap:10px;}
+.nicon{width:34px;height:34px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.nname-wrap{display:flex;flex-direction:column;line-height:1.1;}
+.nname{font-size:16px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;}
+.nname span{color:var(--green);}
+.nsubtitle{font-size:10px;font-weight:600;color:var(--green);letter-spacing:.8px;text-transform:lowercase;font-style:italic;}
+.nlive{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);font-size:10px;font-weight:700;color:var(--green);}
+.ldot{width:5px;height:5px;border-radius:99px;background:var(--green-viv);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.nlinks{display:flex;gap:4px;}
+.nlnk{padding:6px 13px;border-radius:99px;font-size:13px;font-weight:600;color:var(--muted);transition:all .18s;}
+.nlnk:hover,.nlnk.active{background:var(--bg3);color:var(--text);}
+.nlnk.active{color:var(--green);}
+.nadd{padding:8px 16px;border-radius:99px;background:var(--green);color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(27,138,76,.22);transition:all .18s;}
+.nadd:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,138,76,.35);}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:60px;min-height:100vh;}
 .page.active{display:block;animation:pin .28s ease;}
-@keyframes pin{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-/* Home layout */
-.htop{max-width:680px;margin:0 auto;padding:28px 16px 0;}
+@keyframes pin{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── HOME ── */
+.htop{max-width:680px;margin:0 auto;padding:30px 16px 0;}
 .heyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px;}
 .hh1{font-family:var(--fs);font-size:clamp(30px,7vw,44px);line-height:1.08;letter-spacing:-.5px;margin-bottom:6px;}
-.hh1 em{font-style:italic;color:var(--green);}  
-.hsub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}  
-.sbar{display:flex;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--sh0);margin-bottom:14px;transition:border-color .2s,box-shadow .2s;}  
-.sbar:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,138,76,.1);}  
-.sico{padding:0 14px;color:var(--muted);font-size:17px;flex-shrink:0;}  
-.sinp{flex:1;padding:13px 0;background:none;border:none;outline:none;font-size:14px;color:var(--text);}  
-.sinp::placeholder{color:var(--muted);}  
-.sbtn{padding:9px 14px;margin:4px;background:var(--green);color:#fff;font-size:13px;font-weight:700;border-radius:10px;transition:background .18s;}  
-.sbtn:hover{background:#167040;}  
-.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:0 16px 2px;max-width:680px;margin:0 auto 22px;}  
-.filters::-webkit-scrollbar{display:none;}  
-.fp{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:99px;background:var(--bg2);border:1.5px solid var(--border);font-size:13px;font-weight:600;color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .18s;}  
-.fp:hover{border-color:var(--green);color:var(--green);}  
-.fp.active{background:var(--green);border-color:var(--green);color:#fff;}  
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:680px;margin:0 auto 26px;padding:0 16px;}  
-.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:14px 8px;text-align:center;box-shadow:var(--sh0);}  
-.scn{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}  
-.scl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}  
-.sec{max-width:680px;margin:0 auto;padding:0 16px 28px;}  
-.secrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}  
-.sectit{font-size:17px;font-weight:800;letter-spacing:-.3px;}  
-.secmore{font-size:13px;font-weight:700;color:var(--green);cursor:pointer;}  
-/* Legend card */
-.lgcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}  
-.lgtit{font-size:14px;font-weight:800;margin-bottom:4px;}  
-.lgsub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}  
-.lgrows{display:flex;flex-direction:column;gap:10px;}  
-.lgrow{display:flex;align-items:flex-start;gap:10px;}  
-.lgdot{width:10px;height:10px;border-radius:99px;flex-shrink:0;margin-top:4px;}  
-.lglabel{font-size:13px;font-weight:700;margin-bottom:1px;}  
-.lgdesc{font-size:12px;color:var(--muted);line-height:1.4;}  
-.lgdisc{margin-top:14px;padding:10px 12px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:var(--rsm);font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;}  
-/* Spot cards */
-.spots{display:flex;flex-direction:column;gap:10px;}  
-.scard{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s;box-shadow:var(--sh0);}  
-.scard:hover{border-color:var(--green-md);box-shadow:var(--sh1);transform:translateY(-1px);}  
-.scimg{width:54px;height:54px;border-radius:13px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}  
-.scbody{flex:1;min-width:0;}  
-.scname{font-size:15px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}  
-.scmeta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-bottom:6px;}  
-.mdot{width:3px;height:3px;border-radius:99px;background:var(--muted);flex-shrink:0;}  
-.mrat{color:var(--yellow);font-weight:700;}  
-.stags{display:flex;gap:5px;flex-wrap:wrap;}  
-.stag{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}  
-.stag.g{background:var(--green-lt);color:var(--green);border-color:var(--green-md);}  
-.stag.r{background:var(--red-lt);color:var(--red);border-color:var(--red-md);}  
-.sbadge{flex-shrink:0;padding:5px 10px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}  
-.sbr{background:var(--green);color:#fff;}  
-.sbd{background:var(--yellow-lt);color:var(--yellow);border:1.5px solid var(--yellow-md);}  
-.sbu{background:var(--grey-lt);color:var(--muted);border:1.5px solid var(--border);}  
-.sbw{background:var(--red-lt);color:var(--red);border:1.5px solid var(--red-md);}  
-/* Map page decorations */
-.mapwrap{width:100%;height:calc(100vh - 56px);background:#EFF6F2;position:relative;overflow:hidden;}  
-.mapbg{position:absolute;inset:0;background-color:#EFF6F2;background-image:linear-gradient(rgba(27,138,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(27,138,76,.04) 1px,transparent 1px);background-size:36px 36px;}  
-.mrd{position:absolute;background:rgba(255,255,255,.85);border-radius:3px;}  
-.mriver{position:absolute;background:rgba(100,185,220,.3);border-radius:40px;}  
-.mzone{position:absolute;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(27,138,76,.45);transform:translate(-50%,-50%);pointer-events:none;}  
-/* mini map */
-.mmap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;height:160px;position:relative;cursor:pointer;box-shadow:var(--sh0);}  
-.mmov{position:absolute;inset:0;background:rgba(27,138,76,.07);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}  
-.mmcta{padding:9px 18px;background:var(--green);color:#fff;font-weight:700;font-size:13px;border-radius:99px;box-shadow:0 4px 14px rgba(27,138,76,.4);}  
-.mmlabel{position:absolute;bottom:8px;left:8px;padding:3px 9px;background:rgba(255,255,255,.9);border-radius:99px;font-size:10px;font-weight:700;border:1px solid var(--border);}  
-/* bottom sheet */
-.bsov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .28s;}  
-.bsov.open{opacity:1;pointer-events:all;}  
-.bs{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);max-width:640px;margin:0 auto;box-shadow:0 -8px 40px rgba(0,0,0,.12);}  
-.bs.open{transform:translateY(0);}  
-.bshandle{width:34px;height:4px;border-radius:99px;background:var(--border2);margin:12px auto 0;}  
-.bsh{padding:18px 18px 0;}  
-/* add page form */
-.addwrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}  
-.addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}  
-.addsub{font-size:14px;color:var(--muted);margin-bottom:24px;}  
-.goldrule{padding:12px 14px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rsm);font-size:12px;color:var(--green);font-weight:600;line-height:1.5;margin-bottom:22px;}  
-/* toast */
-.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:400;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}  
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}  
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}  
-.flogo{font-size:15px;font-weight:800;margin-bottom:8px;}  
-.flogo span{color:var(--green);}  
-.fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}  
-.fdisc strong{color:var(--yellow);}  
-.fcopy{font-size:11px;color:var(--border2);}  
-@media(max-width:580px){.nlinks{display:none;} .stats{grid-template-columns:repeat(2,1fr);} .mapleg{display:none;} }
+.hh1 em{font-style:italic;color:var(--green);}
+.hsub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.sbar{display:flex;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--sh0);margin-bottom:14px;transition:border-color .2s,box-shadow .2s;}
+.sbar:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,138,76,.1);}
+.sico{padding:0 14px;color:var(--muted);font-size:17px;flex-shrink:0;}
+.sinp{flex:1;padding:13px 0;background:none;border:none;outline:none;font-size:14px;color:var(--text);}
+.sinp::placeholder{color:var(--muted);}
+.sbtn{padding:9px 14px;margin:4px;background:var(--green);color:#fff;font-size:13px;font-weight:700;border-radius:10px;transition:background .18s;}
+.sbtn:hover{background:#167040;}
+.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:0 16px 2px;max-width:680px;margin:0 auto 22px;}
+.filters::-webkit-scrollbar{display:none;}
+.fp{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:99px;background:var(--bg2);border:1.5px solid var(--border);font-size:13px;font-weight:600;color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .18s;}
+.fp:hover{border-color:var(--green);color:var(--green);}
+.fp.active{background:var(--green);border-color:var(--green);color:#fff;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:680px;margin:0 auto 26px;padding:0 16px;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:14px 8px;text-align:center;box-shadow:var(--sh0);}
+.scn{font-size:22px;font-weight:900;line-height:1;margin-bottom:3px;}
+.scl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+.sec{max-width:680px;margin:0 auto;padding:0 16px 28px;}
+.secrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sectit{font-size:17px;font-weight:800;letter-spacing:-.3px;}
+.secmore{font-size:13px;font-weight:700;color:var(--green);cursor:pointer;transition:opacity .15s;}
+.secmore:hover{opacity:.7;}
+
+/* ── LEGEND CARD ── */
+.lgcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}
+.lgtit{font-size:14px;font-weight:800;margin-bottom:4px;}
+.lgsub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.lgrows{display:flex;flex-direction:column;gap:10px;}
+.lgrow{display:flex;align-items:flex-start;gap:10px;}
+.lgdot{width:10px;height:10px;border-radius:99px;flex-shrink:0;margin-top:4px;}
+.lglabel{font-size:13px;font-weight:700;margin-bottom:1px;}
+.lgdesc{font-size:12px;color:var(--muted);line-height:1.4;}
+.lgdisc{margin-top:14px;padding:10px 12px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:var(--rsm);font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;}
+
+/* ── SPOT CARDS (fully clickable) ── */
+.spots{display:flex;flex-direction:column;gap:10px;}
+.scard{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .22s;box-shadow:var(--sh0);text-decoration:none;color:inherit;-webkit-tap-highlight-color:transparent;}
+.scard:hover{border-color:var(--green-md);box-shadow:var(--sh1);transform:translateY(-2px);}
+.scard:active{transform:translateY(0);box-shadow:var(--sh0);}
+.scimg{width:56px;height:56px;border-radius:14px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;transition:transform .22s;}
+.scard:hover .scimg{transform:scale(1.06);}
+.scbody{flex:1;min-width:0;}
+.scname{font-size:15px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scmeta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-bottom:6px;flex-wrap:wrap;}
+.mdot{width:3px;height:3px;border-radius:99px;background:var(--muted);flex-shrink:0;}
+.mrat{color:var(--yellow);font-weight:700;}
+.stags{display:flex;gap:5px;flex-wrap:wrap;}
+.stag{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.stag.g{background:var(--green-lt);color:var(--green);border-color:var(--green-md);}
+.stag.r{background:var(--red-lt);color:var(--red);border-color:var(--red-md);}
+.sbadge{flex-shrink:0;padding:6px 11px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
+.sbr{background:var(--green);color:#fff;}
+.sbd{background:var(--yellow-lt);color:var(--yellow);border:1.5px solid var(--yellow-md);}
+.sbu{background:var(--grey-lt);color:var(--muted);border:1.5px solid var(--border);}
+.sbw{background:var(--red-lt);color:var(--red);border:1.5px solid var(--red-md);}
+.scard-arrow{color:var(--muted);font-size:16px;flex-shrink:0;opacity:0;transform:translateX(-4px);transition:all .2s;}
+.scard:hover .scard-arrow{opacity:1;transform:translateX(0);}
+
+/* ── MINI MAP ── */
+.mmap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;height:160px;position:relative;cursor:pointer;box-shadow:var(--sh0);}
+.mmap:hover .mmov{opacity:1;}
+.mmov{position:absolute;inset:0;background:rgba(27,138,76,.07);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;z-index:2;}
+.mmcta{padding:9px 18px;background:var(--green);color:#fff;font-weight:700;font-size:13px;border-radius:99px;box-shadow:0 4px 14px rgba(27,138,76,.4);}
+.mmlabel{position:absolute;bottom:8px;left:8px;padding:3px 9px;background:rgba(255,255,255,.9);border-radius:99px;font-size:10px;font-weight:700;border:1px solid var(--border);z-index:2;}
+
+/* ── MAP PAGE ── */
+.mapwrap{width:100%;height:calc(100vh - 60px);position:relative;overflow:hidden;}
+#realMap{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;}
+
+/* Map search overlay */
+.mapsrch{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:0;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--sh1);width:min(360px, calc(100vw - 32px));transition:border-color .2s;}
+.mapsrch:focus-within{border-color:var(--green);}
+.msinp{flex:1;padding:11px 14px;background:none;border:none;outline:none;font-size:14px;color:var(--text);}
+.msinp::placeholder{color:var(--muted);}
+.msgo{padding:9px 14px;background:var(--green);color:#fff;font-size:13px;font-weight:700;transition:background .18s;}
+.msgo:hover{background:#167040;}
+
+/* Map legend */
+.mapleg{position:absolute;bottom:16px;left:12px;z-index:10;background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:14px;padding:12px 14px;box-shadow:var(--sh1);min-width:180px;}
+.mltit{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;color:var(--text2);}
+.mlrow{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.mlrow:last-child{margin-bottom:0;}
+.mldot{width:9px;height:9px;border-radius:99px;flex-shrink:0;margin-top:3px;}
+.mllabel{font-size:12px;font-weight:700;line-height:1.2;}
+.mldesc{font-size:10px;color:var(--muted);}
+
+/* Map footer disclaimer */
+.mapfoot{position:absolute;bottom:16px;right:12px;z-index:10;padding:6px 10px;background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:8px;font-size:10px;color:var(--muted);max-width:220px;text-align:right;line-height:1.4;}
+
+/* Leaflet custom popup */
+.leaflet-popup-content-wrapper{border-radius:14px !important;border:1px solid var(--border) !important;box-shadow:var(--sh2) !important;padding:0 !important;}
+.leaflet-popup-content{margin:0 !important;padding:0 !important;}
+.leaflet-popup-tip-container{margin-top:-1px;}
+.map-popup{padding:14px 16px;min-width:220px;}
+.mp-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.mp-emoji{font-size:26px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:10px;border:1px solid var(--border);flex-shrink:0;}
+.mp-info{flex:1;min-width:0;}
+.mp-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+.mp-cat{font-size:11px;color:var(--muted);}
+.mp-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:99px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+.mp-address{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.4;}
+.mp-actions{display:flex;gap:6px;}
+.mp-btn{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;text-align:center;transition:all .18s;cursor:pointer;}
+.mp-btn-pri{background:var(--green);color:#fff;border:none;}
+.mp-btn-pri:hover{background:#167040;}
+.mp-btn-sec{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.mp-btn-sec:hover{border-color:var(--green);color:var(--green);}
+
+/* ── BOTTOM SHEET ── */
+.bsov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .28s;}
+.bsov.open{opacity:1;pointer-events:all;}
+.bs{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);max-width:640px;margin:0 auto;box-shadow:0 -8px 40px rgba(0,0,0,.14);}
+.bs.open{transform:translateY(0);}
+.bshandle{width:36px;height:4px;border-radius:99px;background:var(--border2);margin:12px auto 0;}
+
+/* BS Header */
+.bsh{padding:18px 18px 0;}
+.bshcat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;}
+.bshname{font-family:var(--fs);font-size:26px;line-height:1.1;margin-bottom:6px;}
+.bshmeta{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.bshrat{color:var(--yellow);font-weight:700;}
+
+/* BS Trust block */
+.tblock{display:flex;align-items:flex-start;gap:12px;margin:16px 18px;padding:14px;border-radius:14px;border-width:1.5px;border-style:solid;}
+.tblock.tr{background:var(--green-lt);border-color:var(--green-md);}
+.tblock.td{background:var(--yellow-lt);border-color:var(--yellow-md);}
+.tblock.tu{background:var(--grey-lt);border-color:var(--border2);}
+.tblock.tw{background:var(--red-lt);border-color:var(--red-md);}
+.ticon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.tlabel{font-size:14px;font-weight:800;margin-bottom:2px;}
+.tmeaning{font-size:12px;font-weight:600;margin-bottom:3px;}
+.tnote{font-size:11px;color:var(--muted);line-height:1.4;}
+
+/* BS Grid */
+.bshgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 18px 14px;}
+.bshcell{background:var(--bg3);border-radius:12px;padding:12px;border:1px solid var(--border);}
+.cl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px;}
+.cv{font-size:14px;font-weight:700;}
+.cv.g{color:var(--green);}
+.cv.r{color:var(--red);}
+
+/* BS Reliability bar */
+.relwrap{margin:0 18px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.reltit{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px;}
+.reltrack{height:6px;border-radius:99px;background:var(--border);overflow:hidden;}
+.relfill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.22,1,.36,1);}
+.relfoot{font-size:10px;color:var(--muted);margin-top:7px;}
+
+/* BS Source & Disclaimer */
+.bshsrc{display:flex;align-items:center;gap:8px;margin:0 18px 10px;font-size:12px;color:var(--muted);}
+.bshdisc{margin:0 18px 14px;padding:10px 12px;background:var(--yellow-lt);border:1px solid var(--yellow-md);border-radius:10px;font-size:11px;color:var(--yellow);font-weight:600;line-height:1.5;}
+
+/* BS Actions */
+.bshacts{display:flex;gap:8px;margin:0 18px 28px;}
+.bact{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;transition:all .18s;text-align:center;}
+.bact.pri{background:var(--green);color:#fff;}
+.bact.pri:hover{background:#167040;transform:translateY(-1px);}
+.bact.sec{background:var(--bg3);color:var(--text2);border:1.5px solid var(--border);}
+.bact.sec:hover{border-color:var(--green);color:var(--green);}
+
+/* ── ADD PAGE ── */
+.addwrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
+.addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}
+.addsub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.goldrule{padding:12px 14px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rsm);font-size:12px;color:var(--green);font-weight:600;line-height:1.5;margin-bottom:22px;}
+.fg{margin-bottom:16px;}
+.fl{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;}
+.fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--green);}
+.fselw{position:relative;}
+.fsel{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg2);color:var(--text);outline:none;appearance:none;transition:border-color .2s;}
+.fsel:focus{border-color:var(--green);}
+.fta{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg2);color:var(--text);outline:none;min-height:90px;resize:vertical;transition:border-color .2s;}
+.fta:focus{border-color:var(--green);}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sopt{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;background:var(--bg2);}
+.sopt:hover{border-color:var(--green-md);}
+.soptd{width:12px;height:12px;border-radius:99px;flex-shrink:0;margin-top:3px;}
+.soptl{font-size:13px;font-weight:700;margin-bottom:1px;}
+.sopts{font-size:11px;color:var(--muted);}
+.sel-reliable{border-color:var(--green);background:var(--green-lt);}
+.sel-declared{border-color:var(--yellow);background:var(--yellow-lt);}
+.sel-unknown{border-color:var(--border2);background:var(--grey-lt);}
+.sel-warning{border-color:var(--red);background:var(--red-lt);}
+.fsub{width:100%;padding:14px;border-radius:12px;background:var(--green);color:#fff;font-size:15px;font-weight:800;transition:all .18s;margin-top:8px;}
+.fsub:hover{background:#167040;transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,138,76,.3);}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:500;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}
+.flogo{font-size:15px;font-weight:800;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.flogo span{color:var(--green);}
+.fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}
+.fdisc strong{color:var(--yellow);}
+.fcopy{font-size:11px;color:var(--border2);}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:36px 16px;color:var(--muted);}
+.empty-icon{font-size:36px;margin-bottom:8px;}
+.empty-msg{font-size:14px;font-weight:600;}
+.empty-sub{font-size:12px;margin-top:4px;}
+
+@media(max-width:580px){
+  .nlinks{display:none;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .mapleg{display:none;}
+  .mapfoot{display:none;}
+  .bshgrid{grid-template-columns:1fr 1fr;}
+  .sgrid{grid-template-columns:1fr;}
+  .scard-arrow{display:none;}
+}
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
+
+<!-- NAV -->
 <nav>
   <div class="nbrand">
     <div class="nicon">🕌</div>
-    <div class="nname">CICERO <span>Halal Roma</span></div>
-    <div class="nlive"><div class="ldot"></div> Database Live</div>
+    <div class="nname-wrap">
+      <div class="nname">CICERO <span>HALAL</span></div>
+      <div class="nsubtitle">una guida comune</div>
+    </div>
+    <div class="nlive"><div class="ldot"></div> Live</div>
   </div>
   <div class="nlinks">
     <button class="nlnk active" onclick="goPage('home')">Home</button>
@@ -154,7 +293,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
   </div>
   <button class="nadd" onclick="goPage('add')">+ Aggiungi</button>
 </nav>
-<!-- Home Page -->
+
+<!-- HOME PAGE -->
 <div class="page active" id="page-home">
   <div class="htop">
     <div class="heyebrow">🕌 Roma · Guida Halal</div>
@@ -181,87 +321,68 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
     </div>
     <div class="lgcard">
       <div class="lgtit">Cosa significano i badge</div>
-      <div class="lgsub">CICERO Halal Roma <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
+      <div class="lgsub">CICERO HALAL <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
       <div class="lgrows">
         <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti (HalalTrip, Zabihah, community verificata)</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:#E6A817"></div><div><div class="lglabel" style="color:var(--yellow)">📋 Dichiarato dal locale</div><div class="lgdesc">Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--muted)"></div><div><div class="lglabel" style="color:var(--muted)">❓ Non verificato</div><div class="lgdesc">Segnalato dalla community ma senza conferme. Verifica direttamente con il locale prima di ordinare.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--red)"></div><div><div class="lglabel" style="color:var(--red)">⚠️ Segnalazioni dubbie</div><div class="lgdesc">Utenti hanno riportato problemi di conformità halal. Prestare particolare attenzione.</div></div></div>
       </div>
-      <div class="lgdisc">⚠ CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+      <div class="lgdisc">⚠ CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
     </div>
   </div>
   <div class="sec">
-    <div class="secrow"><div class="sectit">Spot consigliati</div><div class="secmore" onclick="goPage('map')">Vedi sulla mappa →</div></div>
+    <div class="secrow">
+      <div class="sectit">Spot consigliati</div>
+      <div class="secmore" onclick="goPage('map')">Vedi sulla mappa →</div>
+    </div>
     <div class="spots" id="spotsGrid"></div>
   </div>
   <div class="sec">
-    <div class="secrow"><div class="sectit">Mappa veloce</div><div class="secmore" onclick="goPage('map')">Apri mappa →</div></div>
+    <div class="secrow">
+      <div class="sectit">Mappa veloce</div>
+      <div class="secmore" onclick="goPage('map')">Apri mappa →</div>
+    </div>
     <div class="mmap" onclick="goPage('map')">
-      <div class="mmbg">
-        <div class="mmroad" style="top:35%;left:0;right:0;height:12px;"></div>
-        <div class="mmroad" style="top:60%;left:0;right:0;height:8px;"></div>
-        <div class="mmroad" style="top:0;bottom:0;left:30%;width:10px;"></div>
-        <div class="mmroad" style="top:0;bottom:0;left:62%;width:8px;"></div>
-        <div id="mmPins"></div>
-      </div>
+      <div id="miniMapEl" style="position:absolute;inset:0;z-index:1;"></div>
       <div class="mmov"><div class="mmcta">🗺 Apri mappa completa</div></div>
-      <div class="mmlabel" id="miniCount">Roma · 0 spot halal</div>
+      <div class="mmlabel" id="miniCount">Roma · caricamento…</div>
     </div>
   </div>
   <footer>
-    <div class="flogo">CICERO <span>Halal Roma</span></div>
-    <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
-    <div class="fcopy">© 2026 CICERO Halal Roma — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
+    <div class="flogo">CICERO <span>HALAL</span></div>
+    <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="fcopy">© 2026 CICERO HALAL — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
   </footer>
 </div>
-<!-- Map Page -->
+
+<!-- MAP PAGE -->
 <div class="page" id="page-map">
   <div class="mapwrap">
-    <div class="mapbg"></div>
-    <!-- Insert real map container -->
-    <div id="realMap" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;"></div>
-    <!-- Decorative elements remain -->
-    <div class="mrd" style="top:28%;left:0;right:0;height:16px;"></div>
-    <div class="mrd" style="top:50%;left:0;right:0;height:10px;"></div>
-    <div class="mrd" style="top:68%;left:0;right:0;height:12px;"></div>
-    <div class="mrd" style="top:0;bottom:0;left:22%;width:12px;"></div>
-    <div class="mrd" style="top:0;bottom:0;left:50%;width:10px;"></div>
-    <div class="mrd" style="top:0;bottom:0;left:72%;width:8px;"></div>
-    <div class="mrd" style="top:15%;left:5%;right:50%;height:7px;transform:rotate(4deg);"></div>
-    <div class="mriver" style="top:20%;left:14%;width:8%;height:70%;transform:rotate(8deg);"></div>
-    <div class="mzone" style="top:22%;left:13%">Prati</div>
-    <div class="mzone" style="top:55%;left:46%">Trastevere</div>
-    <div class="mzone" style="top:33%;left:62%">Esquilino</div>
-    <div class="mzone" style="top:17%;left:58%">Termini</div>
-    <div class="mzone" style="top:74%;left:66%">Ostiense</div>
-    <div id="mapPins"></div>
+    <div id="realMap"></div>
     <div class="mapsrch">
       <input class="msinp" id="mapSearch" placeholder="🔍  Cerca in mappa…" oninput="renderLeafletMarkers()"/>
       <button class="msgo" onclick="renderLeafletMarkers()">Vai</button>
     </div>
     <div class="mapleg">
-      <div class="mltit">Livello affidabilità</div>
-      <div class="mlrow"><div class="mldot" style="background:var(--green)"></div><div><div class="mllabel">Più fonti concordano</div><div class="mldesc">Verificato da fonti pubbliche</div></div></div>
-      <div class="mlrow"><div class="mldot" style="background:#E6A817"></div><div><div class="mllabel">Dichiarato dal locale</div><div class="mldesc">Non verificato da terzi</div></div></div>
-      <div class="mlrow"><div class="mldot" style="background:var(--muted)"></div><div><div class="mllabel">Non verificato</div><div class="mldesc">Verifica con il locale</div></div></div>
+      <div class="mltit">Affidabilità</div>
+      <div class="mlrow"><div class="mldot" style="background:var(--green)"></div><div><div class="mllabel">Più fonti concordano</div><div class="mldesc">Fonti pubbliche</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:#E6A817"></div><div><div class="mllabel">Dichiarato</div><div class="mldesc">Non verificato terzi</div></div></div>
+      <div class="mlrow"><div class="mldot" style="background:var(--muted)"></div><div><div class="mllabel">Non verificato</div><div class="mldesc">Verifica col locale</div></div></div>
       <div class="mlrow"><div class="mldot" style="background:var(--red)"></div><div><div class="mllabel">Segnalazioni dubbie</div><div class="mldesc">Prestare attenzione</div></div></div>
     </div>
-    <div class="mapzoom">
-      <button class="mzbtn" onclick="mapZoom(1)">+</button>
-      <button class="mzbtn" onclick="mapZoom(-1)">−</button>
-    </div>
-    <div class="mapfoot">⚠ CICERO Halal Roma non certifica i locali — verifica sempre direttamente con il ristoratore</div>
+    <div class="mapfoot">⚠ CICERO HALAL non certifica i locali</div>
   </div>
 </div>
-<!-- Add Page -->
+
+<!-- ADD PAGE -->
 <div class="page" id="page-add">
   <div class="addwrap">
     <div class="addh">Aggiungi uno spot</div>
     <p class="addsub">Aiuta la community. Le segnalazioni vengono revisionate prima della pubblicazione.</p>
     <div class="goldrule">🌿 <strong>Regola d'oro:</strong> non scrivere "certificato halal" se non hai una prova concreta. Usa "dichiarato" o "non verificato" — la community ti ringrazierà.</div>
-    <div class="fg"><label class="fl">Nome del locale *</label><input class="fi" id="fName" type="text" placeholder="Es. Al Madina Kebab" /></div>
-    <div class="fg"><label class="fl">Indirizzo *</label><input class="fi" id="fAddress" type="text" placeholder="Via Roma 42, 00100 Roma RM" /></div>
+    <div class="fg"><label class="fl">Nome del locale *</label><input class="fi" id="fName" type="text" placeholder="Es. Al Madina Kebab"/></div>
+    <div class="fg"><label class="fl">Indirizzo *</label><input class="fi" id="fAddress" type="text" placeholder="Via Roma 42, 00100 Roma RM"/></div>
     <div class="fg">
       <label class="fl">Categoria *</label>
       <div class="fselw"><select class="fsel" id="fCategory"><option>Ristorante</option><option>Street food</option><option>Macelleria</option><option>Pizzeria</option><option>Supermercato</option><option>Caffè / Bakery</option><option>Moschea</option></select></div>
@@ -276,27 +397,40 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       </div>
     </div>
     <div class="fg"><label class="fl">Note aggiuntive</label><textarea class="fta" id="fNote" placeholder="Certifica da quale organizzazione? Solo carne? Alcol nel menù?…"></textarea></div>
-    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" id="fSource" type="text" placeholder="Es. HalalTrip, visita personale, Zabihah…" /></div>
+    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" id="fSource" type="text" placeholder="Es. HalalTrip, visita personale, Zabihah…"/></div>
     <button class="fsub" onclick="submitForm()">Invia segnalazione →</button>
   </div>
 </div>
-<!-- Bottom sheet -->
+
+<!-- BOTTOM SHEET -->
 <div class="bsov" id="bsov" onclick="closeBS()"></div>
 <div class="bs" id="bs">
   <div class="bshandle"></div>
   <div id="bsContent"></div>
 </div>
+
 <script>
-// Supabase credentials
+// ── Supabase ──
 const SUPABASE_URL = "https://fmaildvceklzfulgzujt.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYWlsZHZjZWtsemZ1bGd6dWp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDY0NTQsImV4cCI6MjA5MzIyMjQ1NH0.X7vc5gZFSfwsJVE-h3rMp5FBNLlFpB-reGCx0PjXBh8";
-// Create Supabase client
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// Data array
+
 let P = [];
 let activeF = 'all';
-let map;
-// Normalize place objects
+let map, miniMap;
+
+// ── Trust config ──
+const TRUST = {
+  reliable: { cls:'tr', icon:'✅', label:'Più fonti concordano', color:'var(--green)', short:'Affidabile', meaning:'Confermato da almeno 2 fonti pubbliche indipendenti.', note:'HalalTrip, Zabihah o community verificata.', bar:'88%' },
+  declared: { cls:'td', icon:'📋', label:'Dichiarato dal locale', color:'var(--yellow)', short:'Dichiarato', meaning:'Il ristoratore afferma di essere halal.', note:'Non verificato da fonti terze indipendenti.', bar:'52%' },
+  unknown:  { cls:'tu', icon:'❓', label:'Non verificato', color:'var(--muted)', short:'Non verif.', meaning:'Segnalato dalla community senza conferme.', note:'Verifica direttamente con il locale prima di ordinare.', bar:'24%' },
+  warning:  { cls:'tw', icon:'⚠️', label:'Segnalazioni dubbie', color:'var(--red)', short:'Dubbio', meaning:'Utenti hanno riportato problemi di conformità.', note:'Prestare particolare attenzione.', bar:'10%' }
+};
+
+const BL = { reliable:'sbr', declared:'sbd', unknown:'sbu', warning:'sbw' };
+const BT = { reliable:'Più fonti', declared:'Dichiarato', unknown:'Non verif.', warning:'Dubbio' };
+
+// ── Normalize ──
 function normalizePlace(p) {
   return {
     ...p,
@@ -309,82 +443,22 @@ function normalizePlace(p) {
     cuisine: p.cuisine || '—',
     category: (p.category || 'ristorante').toLowerCase(),
     lat: p.lat != null ? Number(p.lat) : null,
-    lng: p.lng != null ? Number(p.lng) : null,
-    mx: null,
-    my: null
+    lng: p.lng != null ? Number(p.lng) : null
   };
 }
-// Compute relative positions for mini map pins
-function computePositions() {
-  const valid = P.filter(p => p.lat != null && p.lng != null);
-  if (!valid.length) return;
-  const lats = valid.map(p => p.lat);
-  const lngs = valid.map(p => p.lng);
-  const minLat = Math.min(...lats);
-  const maxLat = Math.max(...lats);
-  const minLng = Math.min(...lngs);
-  const maxLng = Math.max(...lngs);
-  P.forEach(p => {
-    if (p.lat != null && p.lng != null && maxLat !== minLat && maxLng !== minLng) {
-      const x = ((p.lng - minLng) / (maxLng - minLng)) * 100;
-      const y = (1 - (p.lat - minLat) / (maxLat - minLat)) * 100;
-      p.mx = x;
-      p.my = y;
-    } else {
-      p.mx = 50;
-      p.my = 50;
-    }
-  });
-  const miniLabel = document.getElementById('miniCount');
-  if (miniLabel) miniLabel.innerText = 'Roma · ' + P.length + ' spot halal';
-}
-// Load places from Supabase
+
+// ── Load ──
 async function loadPlaces() {
   const { data, error } = await supabaseClient.from('places').select('*').order('created_at', { ascending: false });
-  if (error) {
-    showToast('Database non disponibile');
-    return;
-  }
+  if (error) { showToast('Database non disponibile'); return; }
   P = (data || []).map(normalizePlace);
-  computePositions();
   renderStats();
   renderSpots();
-  renderPins();
   renderLeafletMarkers();
+  updateMiniCount();
 }
-// Initialize Leaflet map
-function initMap() {
-  map = L.map('realMap', { zoomControl: false }).setView([41.9028, 12.4964], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(map);
-  L.control.zoom({ position: 'bottomright' }).addTo(map);
-}
-// Render markers on the Leaflet map
-function renderLeafletMarkers() {
-  if (!map) return;
-  // remove existing markers
-  map.eachLayer(layer => {
-    if (layer instanceof L.Marker) map.removeLayer(layer);
-  });
-  const q = (document.getElementById('mapSearch')?.value || '').toLowerCase().trim();
-  P.forEach(p => {
-    if (!p.lat || !p.lng) return;
-    const searchTxt = [p.name, p.address, p.category, p.cuisine, p.source].join(' ').toLowerCase();
-    if (q && !searchTxt.includes(q)) return;
-    const marker = L.marker([p.lat, p.lng]).addTo(map);
-    marker.on('click', () => openBS(p.id));
-  });
-}
-// Show toast message
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-// Render statistics
+
+// ── Stats ──
 function renderStats() {
   const t = P.length;
   const r = P.filter(x => x.status === 'reliable').length;
@@ -396,23 +470,32 @@ function renderStats() {
     `<div class="sc"><div class="scn" style="color:var(--yellow)">${d}</div><div class="scl">Dichiarati</div></div>` +
     `<div class="sc"><div class="scn" style="color:var(--muted)">${u}</div><div class="scl">Da verificare</div></div>`;
 }
-// Badge classes
-const BL = { reliable:'sbr', declared:'sbd', unknown:'sbu', warning:'sbw' };
-const BT = { reliable:'Più fonti', declared:'Dichiarato', unknown:'Non verif.', warning:'Dubbio' };
-// Render spots list
+
+// ── Spots list (fully clickable) ──
 function renderSpots() {
   const q = (document.getElementById('srch')?.value || '').toLowerCase();
   const filtered = P.filter(p => {
     if (activeF === 'mosque') return p.nm;
     if (activeF !== 'all' && !p.category.toLowerCase().includes(activeF)) return false;
-    if (q && !p.name.toLowerCase().includes(q) && !p.cuisine.toLowerCase().includes(q)) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !(p.cuisine||'').toLowerCase().includes(q) && !(p.address||'').toLowerCase().includes(q)) return false;
     return true;
   });
+  if (!filtered.length) {
+    document.getElementById('spotsGrid').innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-msg">Nessun risultato</div><div class="empty-sub">Prova con un altro filtro o cerca un'altra zona</div></div>`;
+    return;
+  }
   document.getElementById('spotsGrid').innerHTML = filtered.map(p => {
-    return `<div class="scard" onclick="openBS(${p.id})">
+    const st = TRUST[p.status] || TRUST['unknown'];
+    return `<div class="scard" onclick="openBS(${p.id})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openBS(${p.id})">
       <div class="scimg">${p.emoji}</div>
-      <div class="scbody"><div class="scname">${p.name}</div>
-        <div class="scmeta"><span class="mrat">★ ${p.rating || '—'}</span><span class="mdot"></span><span>${p.category}</span><span class="mdot"></span><span>${p.price}</span></div>
+      <div class="scbody">
+        <div class="scname">${p.name}</div>
+        <div class="scmeta">
+          ${p.rating ? `<span class="mrat">★ ${p.rating}</span><span class="mdot"></span>` : ''}
+          <span>${p.category}</span>
+          ${p.price ? `<span class="mdot"></span><span>${p.price}</span>` : ''}
+          ${p.address ? `<span class="mdot"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;">${p.address.split(',')[0]}</span>` : ''}
+        </div>
         <div class="stags">
           <span class="stag">${p.cuisine}</span>
           ${p.alcohol ? '<span class="stag r">🍷 Alcol</span>' : '<span class="stag g">✓ No alcol</span>'}
@@ -420,19 +503,12 @@ function renderSpots() {
         </div>
       </div>
       <div class="sbadge ${BL[p.status] || 'sbu'}">${BT[p.status] || 'Non verif.'}</div>
+      <span class="scard-arrow">›</span>
     </div>`;
   }).join('');
 }
-// Render mini and full map pins using precomputed positions
-function renderPins() {
-  document.getElementById('mapPins').innerHTML = P.map(p => {
-    return `<div class="mpin ${p.status}" style="left:${p.mx}%;top:${p.my}%" onclick="openBS(${p.id})" title="${p.name}"><div class="mpinb"><span>${p.emoji}</span></div><div class="mpint"></div></div>`;
-  }).join('');
-  document.getElementById('mmPins').innerHTML = P.slice(0,12).map(p => {
-    return `<div class="mmpin ${p.status}" style="left:${p.mx}%;top:${p.my}%;background:${p.status==='reliable'?'var(--green)':p.status==='declared'?'#E6A817':p.status==='warning'?'var(--red)':'var(--muted)'}">${p.emoji}</div>`;
-  }).join('');
-}
-// Open bottom sheet
+
+// ── Bottom sheet ──
 function openBS(id) {
   const p = P.find(x => x.id === id);
   if (!p) return;
@@ -440,45 +516,151 @@ function openBS(id) {
   document.getElementById('bsContent').innerHTML = `
     <div class="bsh">
       <div class="bshcat">${p.category} · ${p.cuisine}</div>
-      <div class="bshname">${p.name}</div>
-      <div class="bshmeta"><span class="bshrat">★ ${p.rating || '—'}</span><span>(${p.reviews || 0} rec.)</span><span>·</span><span>${p.price}</span><span>·</span><span>${p.address}</span></div>
+      <div class="bshname">${p.emoji} ${p.name}</div>
+      <div class="bshmeta">
+        ${p.rating ? `<span class="bshrat">★ ${p.rating}</span><span>(${p.reviews || 0} rec.)</span><span>·</span>` : ''}
+        <span>${p.price}</span>
+        ${p.address ? `<span>·</span><span>${p.address}</span>` : ''}
+      </div>
     </div>
     <div class="tblock ${st.cls}">
       <div class="ticon">${st.icon}</div>
-      <div><div class="tlabel" style="color:${st.color}">${st.label}</div><div class="tmeaning">${st.meaning}</div><div class="tnote">${st.note}</div></div>
+      <div>
+        <div class="tlabel" style="color:${st.color}">${st.label}</div>
+        <div class="tmeaning">${st.meaning}</div>
+        <div class="tnote">${st.note}</div>
+      </div>
     </div>
     <div class="bshgrid">
       <div class="bshcell"><div class="cl">Cucina</div><div class="cv">${p.cuisine}</div></div>
       <div class="bshcell"><div class="cl">Prezzo</div><div class="cv">${p.price}</div></div>
-      <div class="bshcell"><div class="cl">Alcol</div><div class="cv ${p.alcohol?'r':'g'}">${p.alcohol?'⚠ Sì':'✓ No'}</div></div>
+      <div class="bshcell"><div class="cl">Alcol</div><div class="cv ${p.alcohol ? 'r' : 'g'}">${p.alcohol ? '⚠ Sì' : '✓ No'}</div></div>
       <div class="bshcell"><div class="cl">Stato</div><div class="cv" style="color:${st.color}">${st.short}</div></div>
     </div>
     <div class="relwrap">
-      <div class="reltit">Livello di affidabilità informazione</div>
+      <div class="reltit">Livello di affidabilità</div>
       <div class="reltrack"><div class="relfill" id="relfill" style="width:0;background:${st.color}"></div></div>
       <div class="relfoot">Basato su fonti pubbliche e segnalazioni community</div>
     </div>
     <div class="bshsrc"><span>📌</span><span>${p.source || 'Segnalazione community'}</span></div>
-    <div class="bshdisc">⚠ CICERO Halal Roma non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="bshdisc">⚠ CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
     <div class="bshacts">
-      <button class="bact pri" onclick="openMaps('${encodeURIComponent(p.address)}')">🗺 Indicazioni</button>
+      <button class="bact pri" onclick="openMaps('${encodeURIComponent(p.address || p.name + ' Roma')}')">🗺 Indicazioni</button>
       <button class="bact sec" onclick="goPage('add');closeBS()">⚠ Segnala</button>
     </div>`;
   document.getElementById('bsov').classList.add('open');
   document.getElementById('bs').classList.add('open');
-  setTimeout(() => { const f=document.getElementById('relfill'); if(f) f.style.width = st.bar; }, 120);
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    const f = document.getElementById('relfill');
+    if (f) f.style.width = st.bar;
+  }, 120);
 }
-// open Google Maps
-function openMaps(q) {
-  const url = `https://www.google.com/maps/search/?api=1&query=${q}`;
-  window.open(url, '_blank');
-}
-// Close bottom sheet
+
 function closeBS() {
   document.getElementById('bsov').classList.remove('open');
   document.getElementById('bs').classList.remove('open');
+  document.body.style.overflow = '';
 }
-// Pagination between pages
+
+// ── Maps link ──
+function openMaps(q) {
+  window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, '_blank');
+}
+
+// ── Init Leaflet ──
+function initMap() {
+  map = L.map('realMap', { zoomControl: false }).setView([41.9028, 12.4964], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors', maxZoom: 19
+  }).addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+}
+
+function initMiniMap() {
+  miniMap = L.map('miniMapEl', { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, attributionControl: false }).setView([41.9028, 12.4964], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(miniMap);
+}
+
+// ── Custom marker icon ──
+function makeIcon(status) {
+  const colors = { reliable: '#1B8A4C', declared: '#E6A817', unknown: '#8A8A82', warning: '#C0392B' };
+  const c = colors[status] || colors.unknown;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
+    <path d="M14 0C6.27 0 0 6.27 0 14c0 9.33 14 22 14 22S28 23.33 28 14C28 6.27 21.73 0 14 0z" fill="${c}"/>
+    <circle cx="14" cy="14" r="6" fill="white" opacity=".9"/>
+  </svg>`;
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize: [28, 36],
+    iconAnchor: [14, 36],
+    popupAnchor: [0, -38]
+  });
+}
+
+// ── Render markers on main map ──
+function renderLeafletMarkers() {
+  if (!map) return;
+  map.eachLayer(layer => { if (layer instanceof L.Marker) map.removeLayer(layer); });
+  const q = (document.getElementById('mapSearch')?.value || '').toLowerCase().trim();
+  P.forEach(p => {
+    if (!p.lat || !p.lng) return;
+    const searchTxt = [p.name, p.address, p.category, p.cuisine, p.source].join(' ').toLowerCase();
+    if (q && !searchTxt.includes(q)) return;
+    const st = TRUST[p.status] || TRUST['unknown'];
+    const popupHTML = `<div class="map-popup">
+      <div class="mp-header">
+        <div class="mp-emoji">${p.emoji}</div>
+        <div class="mp-info">
+          <div class="mp-name">${p.name}</div>
+          <div class="mp-cat">${p.category} · ${p.cuisine}</div>
+        </div>
+      </div>
+      <div class="mp-badge" style="background:${p.status==='reliable'?'var(--green)':p.status==='declared'?'#E6A817':p.status==='warning'?'var(--red)':'var(--muted)'};color:#fff;">
+        ${st.icon} ${st.short}
+      </div>
+      ${p.address ? `<div class="mp-address">📍 ${p.address}</div>` : ''}
+      <div class="mp-actions">
+        <button class="mp-btn mp-btn-pri" onclick="openMaps('${encodeURIComponent(p.address || p.name + ' Roma')}')">🗺 Indicazioni</button>
+        <button class="mp-btn mp-btn-sec" onclick="openBS(${p.id});document.querySelector('.leaflet-popup-close-button')?.click()">Dettagli</button>
+      </div>
+    </div>`;
+    const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.status) }).addTo(map);
+    marker.bindPopup(popupHTML, { maxWidth: 280, className: 'cicero-popup' });
+  });
+}
+
+// ── Mini map markers (no popup, decorative) ──
+function renderMiniMarkers() {
+  if (!miniMap) return;
+  miniMap.eachLayer(layer => { if (layer instanceof L.Marker) miniMap.removeLayer(layer); });
+  P.slice(0, 20).forEach(p => {
+    if (!p.lat || !p.lng) return;
+    const colors = { reliable: '#1B8A4C', declared: '#E6A817', unknown: '#8A8A82', warning: '#C0392B' };
+    const c = colors[p.status] || colors.unknown;
+    const dot = L.divIcon({
+      html: `<div style="width:10px;height:10px;border-radius:50%;background:${c};border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,.3)"></div>`,
+      className: '', iconSize: [10, 10], iconAnchor: [5, 5]
+    });
+    L.marker([p.lat, p.lng], { icon: dot }).addTo(miniMap);
+  });
+}
+
+function updateMiniCount() {
+  const el = document.getElementById('miniCount');
+  if (el) el.innerText = `Roma · ${P.length} spot halal`;
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Page nav ──
 function goPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
@@ -491,27 +673,25 @@ function goPage(name) {
     setTimeout(() => { map.invalidateSize(); renderLeafletMarkers(); }, 120);
   }
 }
-// Set filter
+
+// ── Filters ──
 function setF(f, el) {
   activeF = f;
   document.querySelectorAll('.fp').forEach(btn => btn.classList.remove('active'));
   el.classList.add('active');
   renderSpots();
 }
-// Pick status in form
+
+// ── Form ──
 let selectedStatus = 'unknown';
 function pickS(status, el) {
   selectedStatus = status;
-  document.querySelectorAll('.sopt').forEach(o => o.className = 'sopt');
+  document.querySelectorAll('.sopt').forEach(o => {
+    o.className = 'sopt';
+  });
   el.classList.add('sel-' + status);
 }
-// Zoom controls
-function mapZoom(dir) {
-  if (!map) return;
-  const current = map.getZoom();
-  map.setZoom(current + dir);
-}
-// Submit new place
+
 async function submitForm() {
   const name = document.getElementById('fName').value.trim();
   if (!name) { showToast('Inserisci il nome del locale'); return; }
@@ -522,27 +702,16 @@ async function submitForm() {
   const newLat = 41.9028 + (Math.random() - 0.5) * 0.05;
   const newLng = 12.4964 + (Math.random() - 0.5) * 0.05;
   const newPlace = {
-    name: name,
-    address: address,
-    category: category,
-    cuisine: note || '—',
-    price: '€',
-    alcohol: false,
-    halal_status: selectedStatus,
-    source: source,
-    rating: 0,
-    reviews: 0,
-    lat: newLat,
-    lng: newLng,
-    emoji: '📍',
-    near_mosque: false,
+    name, address, category,
+    cuisine: note || '—', price: '€', alcohol: false,
+    halal_status: selectedStatus, source, rating: 0, reviews: 0,
+    lat: newLat, lng: newLng, emoji: '📍', near_mosque: false,
     created_at: new Date().toISOString()
   };
   try {
     const { error } = await supabaseClient.from('places').insert([newPlace]);
     if (error) throw error;
-    showToast('✓ Salvato su Supabase');
-    // clear form
+    showToast('✓ Segnalazione inviata');
     document.getElementById('fName').value = '';
     document.getElementById('fAddress').value = '';
     document.getElementById('fNote').value = '';
@@ -553,13 +722,17 @@ async function submitForm() {
     await loadPlaces();
     goPage('home');
   } catch (err) {
-    showToast('Errore inserimento');
+    showToast('Errore nell\'invio');
   }
 }
-// Initialize application
+
+// ── Init ──
 document.addEventListener('DOMContentLoaded', async () => {
   initMap();
+  initMiniMap();
   await loadPlaces();
+  renderMiniMarkers();
+  updateMiniCount();
 });
 </script>
 </body>
