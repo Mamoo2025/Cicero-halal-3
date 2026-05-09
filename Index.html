@@ -498,7 +498,8 @@ function renderSpots() {
         </div>
         <div class="stags">
           <span class="stag">${p.cuisine}</span>
-          ${p.alcohol ? '<span class="stag r">🍷 Alcol</span>' : '<span class="stag g">✓ No alcol</span>'}
+     ${p.alcohol === true ? '<span class="stag r">🍷 Alcol</span>' : p.alcohol === false ? '<span class="stag g">✓ No alcol</span>' : '<span class="stag">❓ Alcol n.d.</span>'}
+
           ${p.nm ? '<span class="stag">🕌 Vicino moschea</span>' : ''}
         </div>
       </div>
@@ -534,7 +535,8 @@ function openBS(id) {
     <div class="bshgrid">
       <div class="bshcell"><div class="cl">Cucina</div><div class="cv">${p.cuisine}</div></div>
       <div class="bshcell"><div class="cl">Prezzo</div><div class="cv">${p.price}</div></div>
-      <div class="bshcell"><div class="cl">Alcol</div><div class="cv ${p.alcohol ? 'r' : 'g'}">${p.alcohol ? '⚠ Sì' : '✓ No'}</div></div>
+<div class="bshcell"><div class="cl">Alcol</div><div class="cv ${p.alcohol === true ? 'r' : p.alcohol === false ? 'g' : ''}">${p.alcohol === true ? '⚠ Sì' : p.alcohol === false ? '✓ No' : 'n.d.'}</div></div>
+
       <div class="bshcell"><div class="cl">Stato</div><div class="cv" style="color:${st.color}">${st.short}</div></div>
     </div>
     <div class="relwrap">
