@@ -699,8 +699,15 @@ async function submitForm() {
   const category = document.getElementById('fCategory').value;
   const note = document.getElementById('fNote').value.trim();
   const source = document.getElementById('fSource').value.trim() || 'Segnalazione community';
-  const newLat = 41.9028 + (Math.random() - 0.5) * 0.05;
-  const newLng = 12.4964 + (Math.random() - 0.5) * 0.05;
+  let newLat = 41.9028, newLng = 12.4964;
+try {
+  const geo = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Roma')}&limit=1`);
+  const geoData = await geo.json();
+  if (geoData.length > 0) {
+    newLat = parseFloat(geoData[0].lat);
+    newLng = parseFloat(geoData[0].lon);
+  }
+} catch (e) {}
   const newPlace = {
     name, address, category,
     cuisine: note || '—', price: '€', alcohol: false,
