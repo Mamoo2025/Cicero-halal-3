@@ -251,22 +251,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;ali
 .toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:500;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── ABOUT CARD ── */
-.aboutcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}
-.about-h{font-size:15px;font-weight:800;margin-bottom:6px;}
-.about-p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
-.about-contact{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);color:var(--green);font-size:13px;font-weight:700;text-decoration:none;transition:all .18s;}
-.about-contact:hover{background:var(--green);color:#fff;}
-
 /* ── FOOTER ── */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}
 .flogo{font-size:15px;font-weight:800;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
 .flogo span{color:var(--green);}
 .fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}
 .fdisc strong{color:var(--yellow);}
-.fcontact{font-size:12px;color:var(--muted);margin-bottom:8px;}
-.fcontact a{color:var(--green);text-decoration:none;font-weight:700;}
-.fcontact a:hover{text-decoration:underline;}
 .fcopy{font-size:11px;color:var(--border2);}
 
 /* ── EMPTY STATE ── */
@@ -336,7 +326,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       <div class="lgtit">Cosa significano i badge</div>
       <div class="lgsub">CICERO HALAL <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
       <div class="lgrows">
-        <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti o community verificata</div></div></div>
+        <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da più fonti pubbliche</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:#E6A817"></div><div><div class="lglabel" style="color:var(--yellow)">📋 Dichiarato dal locale</div><div class="lgdesc">Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--muted)"></div><div><div class="lglabel" style="color:var(--muted)">❓ Non verificato</div><div class="lgdesc">Segnalato dalla community ma senza conferme. Verifica direttamente con il locale prima di ordinare.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--red)"></div><div><div class="lglabel" style="color:var(--red)">⚠️ Segnalazioni dubbie</div><div class="lgdesc">Utenti hanno riportato problemi di conformità halal. Prestare particolare attenzione.</div></div></div>
@@ -362,21 +352,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       <div class="mmlabel" id="miniCount">Roma · caricamento…</div>
     </div>
   </div>
-  <div class="sec">
-    <div class="secrow">
-      <div class="sectit">Chi siamo</div>
-    </div>
-    <div class="aboutcard">
-      <div class="about-h">Una guida halal di Roma, costruita insieme</div>
-      <p class="about-p">CICERO HALAL è un progetto indipendente nato dalla community musulmana di Roma. Raccogliamo informazioni da fonti pubbliche e segnalazioni dirette per offrire una mappa trasparente — con livelli di affidabilità chiari, non certificazioni.</p>
-      <p class="about-p">Hai un suggerimento, una correzione, o vuoi collaborare? Scrivici.</p>
-      <a class="about-contact" href="mailto:ciao@cicerohalal.it">✉️ ciao@cicerohalal.it</a>
-    </div>
-  </div>
   <footer>
     <div class="flogo">CICERO <span>HALAL</span></div>
     <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
-    <div class="fcontact">Contatti: <a href="mailto:ciao@cicerohalal.it">ciao@cicerohalal.it</a></div>
     <div class="fcopy">© 2026 CICERO HALAL — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
   </footer>
 </div>
