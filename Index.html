@@ -222,6 +222,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;ali
 .addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}
 .addsub{font-size:14px;color:var(--muted);margin-bottom:24px;}
 .goldrule{padding:12px 14px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rsm);font-size:12px;color:var(--green);font-weight:600;line-height:1.5;margin-bottom:22px;}
+.modnote{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;background:var(--yellow-lt);border:1.5px solid var(--yellow-md);border-radius:var(--rsm);margin-bottom:18px;}
+.modnote-icon{font-size:18px;flex-shrink:0;line-height:1.2;}
+.modnote-body{font-size:13px;color:var(--yellow);font-weight:600;line-height:1.5;}
 .fg{margin-bottom:16px;}
 .fl{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;}
 .fi{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s;}
@@ -248,12 +251,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;ali
 .toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:all .35s;z-index:500;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(27,138,76,.35);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+/* ── ABOUT CARD ── */
+.aboutcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh0);}
+.about-h{font-size:15px;font-weight:800;margin-bottom:6px;}
+.about-p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+.about-contact{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--green-lt);border:1px solid var(--green-md);color:var(--green);font-size:13px;font-weight:700;text-decoration:none;transition:all .18s;}
+.about-contact:hover{background:var(--green);color:#fff;}
+
 /* ── FOOTER ── */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16px;text-align:center;}
 .flogo{font-size:15px;font-weight:800;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
 .flogo span{color:var(--green);}
 .fdisc{max-width:480px;margin:0 auto 12px;font-size:12px;color:var(--muted);line-height:1.6;}
 .fdisc strong{color:var(--yellow);}
+.fcontact{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.fcontact a{color:var(--green);text-decoration:none;font-weight:700;}
+.fcontact a:hover{text-decoration:underline;}
 .fcopy{font-size:11px;color:var(--border2);}
 
 /* ── EMPTY STATE ── */
@@ -323,7 +336,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       <div class="lgtit">Cosa significano i badge</div>
       <div class="lgsub">CICERO HALAL <strong>non certifica</strong> i locali. I badge indicano il livello di informazione disponibile — non una certificazione ufficiale halal.</div>
       <div class="lgrows">
-        <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti (HalalTrip, Zabihah, community verificata)</div></div></div>
+        <div class="lgrow"><div class="lgdot" style="background:var(--green)"></div><div><div class="lglabel" style="color:var(--green)">✅ Più fonti concordano</div><div class="lgdesc">Segnalato come halal da almeno 2 fonti pubbliche indipendenti o community verificata</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:#E6A817"></div><div><div class="lglabel" style="color:var(--yellow)">📋 Dichiarato dal locale</div><div class="lgdesc">Il ristoratore afferma di essere halal. Non verificato da fonti terze indipendenti.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--muted)"></div><div><div class="lglabel" style="color:var(--muted)">❓ Non verificato</div><div class="lgdesc">Segnalato dalla community ma senza conferme. Verifica direttamente con il locale prima di ordinare.</div></div></div>
         <div class="lgrow"><div class="lgdot" style="background:var(--red)"></div><div><div class="lglabel" style="color:var(--red)">⚠️ Segnalazioni dubbie</div><div class="lgdesc">Utenti hanno riportato problemi di conformità halal. Prestare particolare attenzione.</div></div></div>
@@ -349,9 +362,21 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       <div class="mmlabel" id="miniCount">Roma · caricamento…</div>
     </div>
   </div>
+  <div class="sec">
+    <div class="secrow">
+      <div class="sectit">Chi siamo</div>
+    </div>
+    <div class="aboutcard">
+      <div class="about-h">Una guida halal di Roma, costruita insieme</div>
+      <p class="about-p">CICERO HALAL è un progetto indipendente nato dalla community musulmana di Roma. Raccogliamo informazioni da fonti pubbliche e segnalazioni dirette per offrire una mappa trasparente — con livelli di affidabilità chiari, non certificazioni.</p>
+      <p class="about-p">Hai un suggerimento, una correzione, o vuoi collaborare? Scrivici.</p>
+      <a class="about-contact" href="mailto:ciao@cicerohalal.it">✉️ ciao@cicerohalal.it</a>
+    </div>
+  </div>
   <footer>
     <div class="flogo">CICERO <span>HALAL</span></div>
     <div class="fdisc"><strong>⚠ Disclaimer:</strong> Le informazioni sono raccolte da fonti pubbliche e segnalazioni community. CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
+    <div class="fcontact">Contatti: <a href="mailto:ciao@cicerohalal.it">ciao@cicerohalal.it</a></div>
     <div class="fcopy">© 2026 CICERO HALAL — Roma · Prototipo MVP · Dai musulmani, per i musulmani</div>
   </footer>
 </div>
@@ -379,7 +404,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
 <div class="page" id="page-add">
   <div class="addwrap">
     <div class="addh">Aggiungi uno spot</div>
-    <p class="addsub">Aiuta la community. Le segnalazioni vengono revisionate prima della pubblicazione.</p>
+    <p class="addsub">Aiuta la community a costruire una guida halal trasparente di Roma.</p>
+    <div class="modnote">
+      <div class="modnote-icon">👀</div>
+      <div class="modnote-body">La tua segnalazione sarà <strong>revisionata da un moderatore</strong> prima di apparire pubblicamente sulla mappa.</div>
+    </div>
     <div class="goldrule">🌿 <strong>Regola d'oro:</strong> non scrivere "certificato halal" se non hai una prova concreta. Usa "dichiarato" o "non verificato" — la community ti ringrazierà.</div>
     <div class="fg"><label class="fl">Nome del locale *</label><input class="fi" id="fName" type="text" placeholder="Es. Al Madina Kebab"/></div>
     <div class="fg"><label class="fl">Indirizzo *</label><input class="fi" id="fAddress" type="text" placeholder="Via Roma 42, 00100 Roma RM"/></div>
@@ -397,7 +426,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 16p
       </div>
     </div>
     <div class="fg"><label class="fl">Note aggiuntive</label><textarea class="fta" id="fNote" placeholder="Certifica da quale organizzazione? Solo carne? Alcol nel menù?…"></textarea></div>
-    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" id="fSource" type="text" placeholder="Es. HalalTrip, visita personale, Zabihah…"/></div>
+    <div class="fg"><label class="fl">Fonte (opzionale)</label><input class="fi" id="fSource" type="text" placeholder="Es. visita personale, sito ufficiale del locale…"/></div>
+    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+      <label for="fWebsite">Lascia vuoto questo campo</label>
+      <input id="fWebsite" name="website" type="text" tabindex="-1" autocomplete="off"/>
+    </div>
     <button class="fsub" onclick="submitForm()">Invia segnalazione →</button>
   </div>
 </div>
@@ -421,7 +454,7 @@ let map, miniMap;
 
 // ── Trust config ──
 const TRUST = {
-  reliable: { cls:'tr', icon:'✅', label:'Più fonti concordano', color:'var(--green)', short:'Affidabile', meaning:'Confermato da almeno 2 fonti pubbliche indipendenti.', note:'HalalTrip, Zabihah o community verificata.', bar:'88%' },
+  reliable: { cls:'tr', icon:'✅', label:'Più fonti concordano', color:'var(--green)', short:'Affidabile', meaning:'Confermato da almeno 2 fonti pubbliche indipendenti.', note:'Fonti pubbliche o community verificata.', bar:'88%' },
   declared: { cls:'td', icon:'📋', label:'Dichiarato dal locale', color:'var(--yellow)', short:'Dichiarato', meaning:'Il ristoratore afferma di essere halal.', note:'Non verificato da fonti terze indipendenti.', bar:'52%' },
   unknown:  { cls:'tu', icon:'❓', label:'Non verificato', color:'var(--muted)', short:'Non verif.', meaning:'Segnalato dalla community senza conferme.', note:'Verifica direttamente con il locale prima di ordinare.', bar:'24%' },
   warning:  { cls:'tw', icon:'⚠️', label:'Segnalazioni dubbie', color:'var(--red)', short:'Dubbio', meaning:'Utenti hanno riportato problemi di conformità.', note:'Prestare particolare attenzione.', bar:'10%' }
@@ -588,16 +621,21 @@ function initMiniMap() {
 function makeIcon(status) {
   const colors = { reliable: '#1B8A4C', declared: '#E6A817', unknown: '#8A8A82', warning: '#C0392B' };
   const c = colors[status] || colors.unknown;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
+  const isUnknown = status === 'unknown';
+  const markerOpacity = isUnknown ? 0.5 : 1;
+  const size = isUnknown ? [22, 28] : [28, 36];
+  const anchor = isUnknown ? [11, 28] : [14, 36];
+  const popupOffset = isUnknown ? [0, -30] : [0, -38];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size[0]}" height="${size[1]}" viewBox="0 0 28 36" style="opacity:${markerOpacity}">
     <path d="M14 0C6.27 0 0 6.27 0 14c0 9.33 14 22 14 22S28 23.33 28 14C28 6.27 21.73 0 14 0z" fill="${c}"/>
     <circle cx="14" cy="14" r="6" fill="white" opacity=".9"/>
   </svg>`;
   return L.divIcon({
     html: svg,
     className: '',
-    iconSize: [28, 36],
-    iconAnchor: [14, 36],
-    popupAnchor: [0, -38]
+    iconSize: size,
+    iconAnchor: anchor,
+    popupAnchor: popupOffset
   });
 }
 
@@ -695,6 +733,10 @@ function pickS(status, el) {
 }
 
 async function submitForm() {
+  if (document.getElementById('fWebsite').value) {
+    showToast('✓ Segnalazione inviata');
+    return;
+  }
   const name = document.getElementById('fName').value.trim();
   if (!name) { showToast('Inserisci il nome del locale'); return; }
   const address = document.getElementById('fAddress').value.trim() || 'Roma';
