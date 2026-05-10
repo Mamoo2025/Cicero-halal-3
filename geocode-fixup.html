@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cicero Halal — Fix coordinate</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#F7F6F2;color:#1A1A18;margin:0;padding:20px;line-height:1.5;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:22px;margin:0 0 8px;}
+  .sub{color:#6c6c66;font-size:14px;margin-bottom:20px;}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fff;border:1px solid #E5E3DB;border-radius:10px;margin-bottom:6px;font-size:13px;gap:10px;}
+  .row .name{font-weight:600;flex:1;min-width:0;}
+  .row .res{color:#8A8A82;font-variant-numeric:tabular-nums;font-size:12px;text-align:right;flex-shrink:0;}
+  .row.ok{border-color:#C2E5D0;}
+  .row.ok .res{color:#1B8A4C;}
+  .row.err{border-color:#F5C6C2;}
+  .row.err .res{color:#C0392B;}
+  .row.run{border-color:#F9DFA0;}
+  .row.run .res{color:#C47D0A;}
+  textarea{width:100%;height:240px;padding:12px;border:1.5px solid #E5E3DB;border-radius:10px;font-family:ui-monospace,monospace;font-size:12px;background:#fff;margin-top:14px;-webkit-appearance:none;}
+  button{padding:14px 24px;border-radius:10px;background:#1B8A4C;color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;width:100%;-webkit-appearance:none;}
+  button:disabled{opacity:.5;}
+  .progress{font-size:13px;color:#6c6c66;margin:14px 0 6px;}
+  .copy-ok{color:#1B8A4C;font-weight:700;}
+  .note{font-size:12px;color:#8A8A82;margin-top:12px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛠 Fix coordinate spot</h1>
+  <p class="sub">Geocodifica i 12 indirizzi via Nominatim (OSM) e genera gli <code>UPDATE</code> SQL. Una richiesta al secondo per rispettare il rate limit.</p>
+  <div class="progress" id="progress">Pronto.</div>
+  <div id="rows"></div>
+  <textarea id="sql" placeholder="L'SQL apparirà qui al termine…" readonly></textarea>
+  <button id="copyBtn" onclick="copySql()" disabled>📋 Copia SQL</button>
+  <div class="note">Dopo aver copiato, apri il SQL editor di Supabase, incolla, esegui. Le UPDATE matchano sull'indirizzo esatto: se hai modificato a mano qualche record, ricontrolla la WHERE.</div>
+</div>
+
+<script>
+const PLACES = [
+  ['Gandhi 2 Indian Restaurant',                'Via Genova 29/A, 00184 Roma'],
+  ['Bismillah Halal Food',                      'Corso del Rinascimento 83, 00186 Roma'],
+  ['Indian Restaurant Halal',                   'Via delle Quattro Fontane 32B, 00184 Roma'],
+  ['Ciro Kebab',                                'Via dei Castani 251/A, 00171 Roma'],
+  ['Ali Baba Restaurant',                       "Via dell'Arco di Travertino 27, 00178 Roma"],
+  ['La Via Della Seta',                         'Via dei Coronari 143, 00186 Roma'],
+  ['Chicken Hut Cafe',                          'Via Tiburtina 352, 00159 Roma'],
+  ['Ristorante Persiano Da Hossein',            'Via di Grottarossa 52/52A, 00189 Roma'],
+  ['Halal Indian & Italian Restaurant',         'Via Candia 6/6A, 00192 Roma'],
+  ['Ristorante Indiano Ambasciata',             'Via dei Pioppi 3, 00172 Roma'],
+  ['Bombay Ristorante Indiano',                 'Via Cerveteri 25/27, 00183 Roma'],
+  ['Shiva Roma - Ristorante Indiano',           'Via dei Velieri 48, 00121 Ostia Roma'],
+];
+
+// Indirizzo "alleggerito" da mandare a Nominatim (rimuovo civico secondario tipo /A o /52A)
+function trimAddr(a){
+  return a.replace(/\/\w+/, '').replace(/\s+/g,' ').trim();
+}
+
+const rowsEl = document.getElementById('rows');
+const progEl = document.getElementById('progress');
+const sqlEl = document.getElementById('sql');
+const copyBtn = document.getElementById('copyBtn');
+
+PLACES.forEach((p,i) => {
+  const div = document.createElement('div');
+  div.className = 'row';
+  div.id = 'r' + i;
+  div.innerHTML = `<div class="name">${p[0]}</div><div class="res">in attesa…</div>`;
+  rowsEl.appendChild(div);
+});
+
+function setRow(i, cls, text){
+  const r = document.getElementById('r'+i);
+  r.className = 'row ' + cls;
+  r.querySelector('.res').textContent = text;
+}
+
+async function geocode(q){
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&countrycodes=it`;
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  return j.length ? { lat: parseFloat(j[0].lat), lng: parseFloat(j[0].lon) } : null;
+}
+
+function sqlEscape(s){
+  return "'" + s.replace(/'/g, "''") + "'";
+}
+
+async function run(){
+  const updates = [];
+  for (let i = 0; i < PLACES.length; i++){
+    const [name, addr] = PLACES[i];
+    setRow(i, 'run', '…');
+    progEl.textContent = `Geocoding ${i+1}/${PLACES.length}: ${name}`;
+    try{
+      // primo tentativo con indirizzo completo, fallback con civico semplificato
+      let res = await geocode(addr);
+      if (!res){
+        await new Promise(r=>setTimeout(r,1100));
+        res = await geocode(trimAddr(addr));
+      }
+      if (res){
+        setRow(i, 'ok', `${res.lat.toFixed(4)}, ${res.lng.toFixed(4)}`);
+        updates.push(`UPDATE places SET lat=${res.lat}, lng=${res.lng} WHERE address=${sqlEscape(addr)};`);
+      } else {
+        setRow(i, 'err', 'NESSUN RISULTATO');
+        updates.push(`-- NESSUN RISULTATO per: ${addr}`);
+      }
+    } catch(e){
+      setRow(i, 'err', 'errore: ' + e.message);
+      updates.push(`-- ERRORE per ${addr}: ${e.message}`);
+    }
+    await new Promise(r => setTimeout(r, 1100));
+  }
+  progEl.textContent = '✓ Fatto. Copia il blocco SQL qui sotto e incollalo su Supabase.';
+  sqlEl.value = updates.join('\n');
+  copyBtn.disabled = false;
+}
+
+async function copySql(){
+  try{
+    await navigator.clipboard.writeText(sqlEl.value);
+    copyBtn.textContent = '✓ Copiato!';
+    copyBtn.classList.add('copy-ok');
+    setTimeout(() => { copyBtn.textContent = '📋 Copia SQL'; copyBtn.classList.remove('copy-ok'); }, 2000);
+  } catch(e){
+    // fallback iOS: seleziona il testo, l'utente fa "Copia"
+    sqlEl.removeAttribute('readonly');
+    sqlEl.focus();
+    sqlEl.select();
+    sqlEl.setAttribute('readonly','');
+    copyBtn.textContent = 'Selezionato, premi "Copia"';
+  }
+}
+
+run();
+</script>
+</body>
+</html>
