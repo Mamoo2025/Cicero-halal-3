@@ -8,7 +8,7 @@
 -- ────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS comments (
   id          BIGSERIAL PRIMARY KEY,
-  place_id    BIGINT NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+  place_id    UUID NOT NULL REFERENCES places(id) ON DELETE CASCADE,
   author      TEXT,
   body        TEXT NOT NULL CHECK (length(body) BETWEEN 1 AND 2000),
   rating      SMALLINT CHECK (rating BETWEEN 1 AND 5),
@@ -42,7 +42,7 @@ CREATE POLICY "anon insert comments"
 -- ────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS reports (
   id             BIGSERIAL PRIMARY KEY,
-  place_id       BIGINT REFERENCES places(id)   ON DELETE CASCADE,
+  place_id       UUID   REFERENCES places(id)   ON DELETE CASCADE,
   comment_id     BIGINT REFERENCES comments(id) ON DELETE CASCADE,
   reason         TEXT NOT NULL CHECK (length(reason) BETWEEN 1 AND 60),
   description    TEXT       CHECK (description    IS NULL OR length(description)    <= 2000),
