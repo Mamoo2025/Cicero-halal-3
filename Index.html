@@ -217,6 +217,39 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;ali
 .bact.sec{background:var(--bg3);color:var(--text2);border:1.5px solid var(--border);}
 .bact.sec:hover{border-color:var(--green);color:var(--green);}
 
+/* ── BS — Comments & Report sections ── */
+.bs-section{margin:0 18px 18px;padding-top:16px;border-top:1px solid var(--border);}
+.bs-sectit{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;margin-bottom:12px;}
+.bs-sectit-spacer{flex:1;}
+.cmcount{padding:2px 8px;border-radius:99px;background:var(--bg3);font-size:11px;font-weight:700;color:var(--text2);border:1px solid var(--border);}
+.cmadd-btn{padding:6px 12px;border-radius:99px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);font-size:12px;font-weight:700;transition:all .18s;-webkit-appearance:none;}
+.cmadd-btn:hover{border-color:var(--green);color:var(--green);}
+.cmadd-btn.act{background:var(--green);color:#fff;border-color:var(--green);}
+
+.cmform{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;position:relative;}
+.cmrating-pick{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding:2px 0;}
+.cmstar{font-size:22px;color:var(--border2);cursor:pointer;line-height:1;user-select:none;padding:0 1px;}
+.cmstar.on{color:var(--yellow);}
+.cmform .fi,.cmform .fta{font-size:13px;}
+.cmform .fsub{padding:10px;font-size:13px;margin-top:2px;}
+
+.cmlist{display:flex;flex-direction:column;gap:8px;}
+.cmitem{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.cmhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px;}
+.cmauthor{font-size:13px;font-weight:700;color:var(--text);}
+.cmdate{font-size:11px;color:var(--muted);}
+.cmrating-show{font-size:13px;color:var(--yellow);margin-bottom:4px;letter-spacing:1px;}
+.cmbody{font-size:13px;color:var(--text2);line-height:1.5;white-space:pre-wrap;word-wrap:break-word;}
+.cmflag{margin-top:8px;padding:3px 8px;border-radius:99px;background:none;border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:600;transition:all .15s;-webkit-appearance:none;}
+.cmflag:hover{border-color:var(--red);color:var(--red);}
+.empty-cm{padding:18px;text-align:center;color:var(--muted);font-size:13px;background:var(--bg3);border:1px dashed var(--border);border-radius:12px;}
+
+.rpform{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;position:relative;}
+.rp-help{display:flex;align-items:flex-start;gap:8px;padding:9px 11px;background:var(--bg2);border:1px dashed var(--border);border-radius:8px;font-size:11px;color:var(--muted);line-height:1.5;}
+.rp-help-ico{font-size:14px;flex-shrink:0;line-height:1.2;}
+.rpform .fi,.rpform .fta,.rpform .fsel{font-size:13px;}
+.rpform .fsub{padding:10px;font-size:13px;margin-top:2px;}
+
 /* ── ADD PAGE ── */
 .addwrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
 .addh{font-family:var(--fs);font-size:30px;line-height:1.1;margin-bottom:5px;}
@@ -524,6 +557,8 @@ function renderSpots() {
 function openBS(id) {
   const p = P.find(x => x.id === id);
   if (!p) return;
+  currentPlaceId = id;
+  cmRating = 0;
   const st = TRUST[p.status] || TRUST['unknown'];
   document.getElementById('bsContent').innerHTML = `
     <div class="bsh">
@@ -559,7 +594,51 @@ function openBS(id) {
     <div class="bshdisc">⚠ CICERO HALAL non certifica i locali. Verifica sempre direttamente con il ristoratore prima di ordinare.</div>
     <div class="bshacts">
       <button class="bact pri" onclick="openMaps('${encodeURIComponent(p.address || p.name + ' Roma')}')">🗺 Indicazioni</button>
-      <button class="bact sec" onclick="goPage('add');closeBS()">⚠ Segnala</button>
+    </div>
+
+    <div class="bs-section">
+      <div class="bs-sectit">💬 Commenti <span id="cmCount" class="cmcount">…</span><div class="bs-sectit-spacer"></div><button class="cmadd-btn" id="cmFormToggle" onclick="toggleCommentForm()">+ Commenta</button></div>
+      <div id="cmForm" class="cmform" hidden>
+        <input class="fi" id="cmAuthor" type="text" placeholder="Il tuo nome (opzionale)" maxlength="40"/>
+        <div class="cmrating-pick">
+          <span>Valutazione (opz):</span>
+          <span class="cmstar" data-r="1" onclick="setCmRating(1)">☆</span>
+          <span class="cmstar" data-r="2" onclick="setCmRating(2)">☆</span>
+          <span class="cmstar" data-r="3" onclick="setCmRating(3)">☆</span>
+          <span class="cmstar" data-r="4" onclick="setCmRating(4)">☆</span>
+          <span class="cmstar" data-r="5" onclick="setCmRating(5)">☆</span>
+        </div>
+        <textarea class="fta" id="cmBody" placeholder="Com'è stata la tua esperienza? (max 2000 caratteri)" maxlength="2000"></textarea>
+        <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+          <label for="cmHp">Lascia vuoto</label>
+          <input id="cmHp" name="website" type="text" tabindex="-1" autocomplete="off"/>
+        </div>
+        <button class="fsub" onclick="submitComment()">Pubblica commento</button>
+      </div>
+      <div id="cmList" class="cmlist"><div class="empty-cm">Caricamento commenti…</div></div>
+    </div>
+
+    <div class="bs-section">
+      <div class="bs-sectit">🔒 Segnala al gestore<div class="bs-sectit-spacer"></div><button class="cmadd-btn" id="rpToggle" onclick="toggleReportPanel()">Apri</button></div>
+      <div id="rpForm" class="rpform" hidden>
+        <div class="rp-help"><span class="rp-help-ico">🔒</span><span>Segnalazione <strong>privata</strong>: la vede solo il gestore della guida, non viene pubblicata.</span></div>
+        <select class="fsel" id="rpReason">
+          <option value="info_errate">Informazioni errate (indirizzo, orari…)</option>
+          <option value="non_halal">Non è halal / problemi di conformità</option>
+          <option value="chiuso">Locale chiuso o non esistente</option>
+          <option value="duplicato">Duplicato di un altro spot</option>
+          <option value="commenti">Commento offensivo / spam</option>
+          <option value="altro">Altro</option>
+        </select>
+        <textarea class="fta" id="rpDesc" placeholder="Descrizione (opzionale)" maxlength="2000"></textarea>
+        <input class="fi" id="rpEmail" type="email" placeholder="Email per follow-up (opzionale)" maxlength="200"/>
+        <input id="rpCommentId" type="hidden"/>
+        <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+          <label for="rpHp">Lascia vuoto</label>
+          <input id="rpHp" name="website" type="text" tabindex="-1" autocomplete="off"/>
+        </div>
+        <button class="fsub" onclick="submitReport()">Invia segnalazione privata</button>
+      </div>
     </div>`;
   document.getElementById('bsov').classList.add('open');
   document.getElementById('bs').classList.add('open');
@@ -568,6 +647,7 @@ function openBS(id) {
     const f = document.getElementById('relfill');
     if (f) f.style.width = st.bar;
   }, 120);
+  loadComments(id);
 }
 
 function closeBS() {
@@ -753,6 +833,148 @@ try {
   } catch (err) {
     showToast('Errore nell\'invio');
   }
+}
+
+// ── Comments & Reports state ──
+let currentPlaceId = null;
+let cmRating = 0;
+
+function escapeHtml(s){
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadComments(placeId){
+  const list = document.getElementById('cmList');
+  const cnt = document.getElementById('cmCount');
+  if (list) list.innerHTML = '<div class="empty-cm">Caricamento commenti…</div>';
+  if (cnt) cnt.textContent = '…';
+  const { data, error } = await supabaseClient
+    .from('comments')
+    .select('*')
+    .eq('place_id', placeId)
+    .order('created_at', { ascending: false });
+  if (error){
+    if (list) list.innerHTML = '<div class="empty-cm">Impossibile caricare i commenti</div>';
+    if (cnt) cnt.textContent = '0';
+    return;
+  }
+  renderCommentsList(data || []);
+}
+
+function renderCommentsList(comments){
+  const el = document.getElementById('cmList');
+  const cnt = document.getElementById('cmCount');
+  if (cnt) cnt.textContent = comments.length;
+  if (!el) return;
+  if (!comments.length){
+    el.innerHTML = '<div class="empty-cm">Nessun commento ancora. Sii il primo a condividere la tua esperienza.</div>';
+    return;
+  }
+  el.innerHTML = comments.map(c => {
+    const stars = c.rating ? '★'.repeat(c.rating) + '☆'.repeat(5-c.rating) : '';
+    const date = new Date(c.created_at).toLocaleDateString('it-IT', {day:'numeric', month:'short', year:'numeric'});
+    return `<div class="cmitem">
+      <div class="cmhead">
+        <div class="cmauthor">${escapeHtml(c.author || 'Anonimo')}</div>
+        <div class="cmdate">${date}</div>
+      </div>
+      ${stars ? `<div class="cmrating-show">${stars}</div>` : ''}
+      <div class="cmbody">${escapeHtml(c.body)}</div>
+      <button class="cmflag" onclick="openReportCm(${c.id})">⚠ Segnala questo commento</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleCommentForm(){
+  const f = document.getElementById('cmForm');
+  const btn = document.getElementById('cmFormToggle');
+  if (!f || !btn) return;
+  f.hidden = !f.hidden;
+  btn.classList.toggle('act', !f.hidden);
+  btn.textContent = f.hidden ? '+ Commenta' : 'Chiudi';
+}
+
+function setCmRating(r){
+  cmRating = r;
+  document.querySelectorAll('.cmstar').forEach(s => {
+    const v = parseInt(s.dataset.r, 10);
+    s.classList.toggle('on', v <= r);
+    s.textContent = v <= r ? '★' : '☆';
+  });
+}
+
+async function submitComment(){
+  if (document.getElementById('cmHp')?.value){ showToast('✓ Commento inviato'); return; }
+  if (!currentPlaceId){ showToast('Errore: spot non identificato'); return; }
+  const body = document.getElementById('cmBody').value.trim();
+  if (!body){ showToast('Scrivi prima il commento'); return; }
+  if (body.length > 2000){ showToast('Commento troppo lungo'); return; }
+  const authorRaw = document.getElementById('cmAuthor').value.trim();
+  const payload = {
+    place_id: currentPlaceId,
+    author: authorRaw || null,
+    body,
+    rating: cmRating || null
+  };
+  const { error } = await supabaseClient.from('comments').insert([payload]);
+  if (error){ showToast('Errore nell\'invio del commento'); return; }
+  showToast('✓ Commento pubblicato');
+  document.getElementById('cmBody').value = '';
+  document.getElementById('cmAuthor').value = '';
+  setCmRating(0);
+  toggleCommentForm();
+  loadComments(currentPlaceId);
+}
+
+function toggleReportPanel(){
+  const f = document.getElementById('rpForm');
+  const btn = document.getElementById('rpToggle');
+  if (!f || !btn) return;
+  f.hidden = !f.hidden;
+  btn.classList.toggle('act', !f.hidden);
+  btn.textContent = f.hidden ? 'Apri' : 'Chiudi';
+  if (!f.hidden) f.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function openReportCm(commentId){
+  const f = document.getElementById('rpForm');
+  const btn = document.getElementById('rpToggle');
+  if (!f || !btn) return;
+  if (f.hidden){
+    f.hidden = false;
+    btn.classList.add('act');
+    btn.textContent = 'Chiudi';
+  }
+  document.getElementById('rpReason').value = 'commenti';
+  document.getElementById('rpCommentId').value = commentId;
+  const desc = document.getElementById('rpDesc');
+  if (desc && !desc.value.includes(`#${commentId}`)){
+    desc.value = `Segnalo il commento #${commentId}: ` + desc.value;
+  }
+  f.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+async function submitReport(){
+  if (document.getElementById('rpHp')?.value){ showToast('✓ Segnalazione inviata'); return; }
+  if (!currentPlaceId){ showToast('Errore: spot non identificato'); return; }
+  const reason = document.getElementById('rpReason').value;
+  const description = document.getElementById('rpDesc').value.trim() || null;
+  const contact_email = document.getElementById('rpEmail').value.trim() || null;
+  const commentIdVal = document.getElementById('rpCommentId').value;
+  const payload = {
+    place_id: currentPlaceId,
+    comment_id: commentIdVal ? parseInt(commentIdVal, 10) : null,
+    reason, description, contact_email
+  };
+  const { error } = await supabaseClient.from('reports').insert([payload]);
+  if (error){ showToast('Errore nell\'invio della segnalazione'); return; }
+  showToast('✓ Segnalazione privata inviata');
+  document.getElementById('rpDesc').value = '';
+  document.getElementById('rpEmail').value = '';
+  document.getElementById('rpCommentId').value = '';
+  document.getElementById('rpReason').value = 'info_errate';
+  toggleReportPanel();
 }
 
 // ── Init ──
