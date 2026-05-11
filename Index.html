@@ -530,7 +530,7 @@ function renderSpots() {
   }
   document.getElementById('spotsGrid').innerHTML = filtered.map(p => {
     const st = TRUST[p.status] || TRUST['unknown'];
-    return `<div class="scard" onclick="openBS(${p.id})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openBS(${p.id})">
+    return `<div class="scard" onclick="openBS('${p.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openBS('${p.id}')">
       <div class="scimg">${p.emoji}</div>
       <div class="scbody">
         <div class="scname">${p.name}</div>
@@ -721,7 +721,7 @@ function renderLeafletMarkers() {
       ${p.address ? `<div class="mp-address">📍 ${p.address}</div>` : ''}
       <div class="mp-actions">
         <button class="mp-btn mp-btn-pri" onclick="openMaps('${encodeURIComponent(p.address || p.name + ' Roma')}')">🗺 Indicazioni</button>
-        <button class="mp-btn mp-btn-sec" onclick="openBS(${p.id});document.querySelector('.leaflet-popup-close-button')?.click()">Dettagli</button>
+        <button class="mp-btn mp-btn-sec" onclick="openBS('${p.id}');document.querySelector('.leaflet-popup-close-button')?.click()">Dettagli</button>
       </div>
     </div>`;
     const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.status) }).addTo(map);
